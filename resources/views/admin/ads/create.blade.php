@@ -118,7 +118,7 @@
     Dropzone.options.bannerDropzone = {
     url: '{{ route('admin.ads.storeMedia') }}',
     maxFilesize: 20, // MB
-    acceptedFiles: '.jpeg,.jpg,.png,.gif',
+    acceptedFiles: '.jpeg,.jpg,.png,.gif,.svg,.webp',
     maxFiles: 1,
     addRemoveLinks: true,
     headers: {

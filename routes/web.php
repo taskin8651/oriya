@@ -179,3 +179,7 @@ Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 
         Route::post('profile/destroy', 'ChangePasswordController@destroy')->name('password.destroyProfile');
     }
 });
+
+
+// Custom Routes
+Route::get('/',[App\Http\Controllers\Custom\IndexController::class,'index']);

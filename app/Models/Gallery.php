@@ -31,11 +31,13 @@ class Gallery extends Model implements HasMedia
         'image' => 'Image',
         'video' => 'Video',
         'file'  => 'File',
+        'youtube' => 'Youtube',
     ];
 
     protected $fillable = [
         'title',
         'description',
+        'url',
         'created_at',
         'updated_at',
         'deleted_at',

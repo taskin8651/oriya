@@ -33,4 +33,10 @@ class Category extends Model
     {
         return $date->format('Y-m-d H:i:s');
     }
+
+    public function posts()
+{
+    return $this->hasMany(Post::class, 'category_id');
+}
+
 }

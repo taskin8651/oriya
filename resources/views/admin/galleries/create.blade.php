@@ -34,6 +34,17 @@
                 @endif
                 <span class="help-block">{{ trans('cruds.gallery.fields.description_helper') }}</span>
             </div>
+
+            <div class="form-group">
+                <label for="title">{{ trans('cruds.headerLogo.fields.url') }}</label>
+                <input class="form-control {{ $errors->has('url') ? 'is-invalid' : '' }}" type="text" name="url" id="url" value="{{ old('url', '') }}">
+                @if($errors->has('url'))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('url') }}
+                    </div>
+                @endif
+                <span class="help-block">{{ trans('cruds.headerLogo.fields.url_helper') }}</span>
+            </div>
             <div class="form-group">
                 <label for="upload_file">{{ trans('cruds.gallery.fields.upload_file') }}</label>
                 <div class="needsclick dropzone {{ $errors->has('upload_file') ? 'is-invalid' : '' }}" id="upload_file-dropzone">
