@@ -15,7 +15,7 @@
     <ul class="space-y-4 mt-4">
         @forelse($odishaPosts as $post)
             <li class="pb-3 border-b">
-                <a href="{{ url('news/'.$post->slug) }}" class="flex gap-3 items-start">
+                <a href="{{ route('post.details', $post->slug)  }}" class="flex gap-3 items-start">
 
                     <!-- LEFT: IMAGE -->
                     <div class="w-24 h-16 flex-shrink-0">
@@ -148,7 +148,9 @@
                 </span>
 
                 <h3 class="text-lg font-bold mt-2">
-                    {{ $post->title }}
+                   <a href="{{ route('post.details', $post->slug) }}">
+        {{ $post->title }}
+    </a>
                 </h3>
 
                 <p class="text-gray-600 text-sm mt-2">
@@ -197,7 +199,7 @@
         <marquee behavior="scroll" direction="up" scrollamount="3" height="250px">
             @foreach($latestPosts as $post)
                 <div class="pb-3 border-b mb-3">
-                    <a href="{{ url('news/'.$post->slug) }}" class="font-semibold hover:text-primary">
+                    <a href="{{ route('post.details', $post->slug) }}" class="font-semibold hover:text-primary">
                         {{ $post->title }}
                     </a>
                     <p class="text-xs text-gray-500 mt-1">
@@ -294,9 +296,12 @@
                                      class="w-28 h-20 object-cover rounded">
 
                                 <div>
-                                    <h3 class="font-semibold leading-tight hover:text-red-600 cursor-pointer">
-                                        {{ $post->title }}
-                                    </h3>
+                                   <h3 class="font-semibold leading-tight hover:text-red-600 cursor-pointer">
+    <a href="{{ route('post.details', $post->slug) }}">
+        {{ $post->title }}
+    </a>
+</h3>
+
                                     <p class="text-sm text-gray-500">
                                         {{ $post->created_at->format('F d, Y') }}
                                     </p>

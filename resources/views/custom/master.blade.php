@@ -1,3 +1,14 @@
+@php 
+    use App\Models\Ad;
+    use App\Models\Post;
+    use App\Models\Category;
+
+   
+
+    $categories = Category::all();
+   
+@endphp
+
 <!DOCTYPE html>
 <html lang="hi">
 <head>
@@ -88,7 +99,13 @@
         <nav class="bg-dark">
             <div class="container mx-auto px-4">
                 <ul class="flex items-center text-sm overflow-x-auto space-x-6 py-3 text-gray-200">
-                    <li><a href="#" class="hover:text-primary font-medium">मुख्य समाचार</a></li>
+                    @foreach($categories as $category)
+
+                   <li><a href="{{ route('category.posts', $category->slug) }}" class="hover:text-primary font-medium">
+    {{ $category->name }}
+</a></li>
+
+                    @endforeach
                     <li><a href="#" class="hover:text-primary font-medium">ओडिशा</a></li>
                     <li><a href="#" class="hover:text-primary font-medium">राष्ट्रीय</a></li>
                     <li><a href="#" class="hover:text-primary font-medium">अंतर्राष्ट्रीय</a></li>
