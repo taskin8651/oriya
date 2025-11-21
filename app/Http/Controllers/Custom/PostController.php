@@ -10,12 +10,11 @@ use App\Models\Category;
 
 class PostController extends Controller
 {
-    public function index($slug)
-    {
-        // Category find by slug
-        $category = Category::where('slug', $slug)->firstOrFail();
-
-        // Get posts of this category
+   public function index($slug)
+{
+    // CURRENT category
+    $category = Category::where('slug', $slug)->firstOrFail();
+     // Get posts of this category
         $posts = Post::with('media')
             ->where('category_id', $category->id)
             ->where('status', 'published')
@@ -23,8 +22,58 @@ class PostController extends Controller
             ->take(20) // You can increase
             ->get();
 
-        return view('custom.post', compact('category', 'posts'));
-    }
+    // All categories sorted (for ordering)
+    $allCategories = Category::orderBy('id')->get();
+    $currentIndex = $allCategories->search(function ($cat) use ($category) {
+        return $cat->id === $category->id;
+    });
+
+  // CENTER: Current category posts with pagination (5 per page)
+    $centerPosts = Post::with('media')
+        ->where('category_id', $category->id)
+        ->where('status', 'published')
+        ->latest()
+        ->paginate(5); // 5 posts per page
+
+
+    // LEFT: Next 2 categories
+    $leftCategories = $allCategories->slice($currentIndex + 1, 2);
+
+    $leftPosts = Post::with('media')
+        ->whereIn('category_id', $leftCategories->pluck('id'))
+        ->where('status', 'published')
+        ->latest()
+        ->take(20)
+        ->get();
+
+
+    // RIGHT: Previous categories
+    $rightCategories = $allCategories->slice(0, $currentIndex);
+
+    $rightPosts = Post::with('media')
+        ->whereIn('category_id', $rightCategories->pluck('id'))
+        ->where('status', 'published')
+        ->latest()
+        ->take(20)
+        ->get();
+
+         $sidebarAd = Ad::where('type', 'sidebar')
+    ->where('status', 'active')
+    ->first();
+
+
+    return view('custom.post', compact(
+        'category',
+        'centerPosts',
+        'leftPosts',
+        'rightPosts',
+        'leftCategories',
+        'rightCategories',
+        'posts',
+        'sidebarAd'
+    ));
+}
+
 
 
    public function postDetails($slug)

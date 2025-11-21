@@ -2,10 +2,22 @@
     use App\Models\Ad;
     use App\Models\Post;
     use App\Models\Category;
+    use App\Models\BreakingNews;
+    use App\Models\HeaderLogo;
+    use App\Models\FooterLogo;
+    use App\Models\ContactDetail;
 
    
 
     $categories = Category::all();
+    $breakingNews = BreakingNews::where('status','active')->latest()->get();
+    $Banner = Ad::where('type', 'Banner')->where('status', 'active')->latest()->first();
+     // Header logo
+        $headerlogo = HeaderLogo::first();
+    // Footer logo
+        $footerlogo = FooterLogo::first();
+
+        $contactDetails = ContactDetail::first();
    
 @endphp
 
@@ -79,21 +91,46 @@
 
     <!-- HEADER LOGO + LIVE TV -->
     <header class="bg-white shadow">
-        <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center">
+      <div class="container mx-auto px-4  flex items-center justify-between">
 
-            <div class="text-center md:text-left flex items-center">
-                <img src="https://dummyimage.com/300x80/e11d48/ffffff&text=PRAMEYA+NEWS7" alt="Prameya News" class="h-12 md:h-16">
-            </div>
+     <!-- Left: Logo -->
+    <div class="flex-shrink-0">
+       <img src="{{ $headerlogo->upload_image?->getUrl() ?? 'https://via.placeholder.com/150x50' }}" 
+     alt="{{ $headerlogo->title  }} " class="h-12 md:h-16 object-contain">
 
-            <div class="flex items-center space-x-4 mt-3 md:mt-0">
-                <a href="#" class="bg-primary text-white px-5 py-2 rounded-full font-semibold shadow hover:bg-red-700 flex items-center">
-                    <i class="fa-solid fa-tv mr-2"></i> LIVE TV
-                </a>
-                <a href="#" class="bg-gray-800 text-white px-5 py-2 rounded-full font-semibold shadow hover:bg-gray-900 flex items-center">
-                    <i class="fa-solid fa-newspaper mr-2"></i> ePaper
-                </a>
+    </div>
+
+    <!-- Center: Ad -->
+<div class="flex-1 flex justify-center ">
+    <div class="w-[328px] h-[42px] bg-gray-200 rounded-lg flex items-center justify-center text-gray-600 border border-dashed border-gray-400 overflow-hidden">
+        @if(isset($Banner) && $Banner->banner)
+            <a href="{{ $Banner->link ?? '#' }}" class="block w-full h-full">
+                <img src="{{ $Banner->banner->getUrl() }}"
+                     class="w-full h-full object-cover rounded-lg"
+                     alt="Advertisement">
+            </a>
+        @else
+            <div class="flex flex-col items-center justify-center h-full">
+                <i class="fa-solid fa-ad text-2xl mb-1"></i>
+                <p class="text-xs">विज्ञापन</p>
             </div>
-        </div>
+        @endif
+    </div>
+</div>
+
+
+    <!-- Right: Buttons -->
+    <div class="flex items-center space-x-4 flex-shrink-0">
+        <a href="#" class="bg-primary text-white px-5 py-2 rounded-full font-semibold shadow hover:bg-red-700 flex items-center">
+            <i class="fa-solid fa-tv mr-2"></i> LIVE TV
+        </a>
+        <a href="#" class="bg-gray-800 text-white px-5 py-2 rounded-full font-semibold shadow hover:bg-gray-900 flex items-center">
+            <i class="fa-solid fa-newspaper mr-2"></i> ePaper
+        </a>
+    </div>
+
+</div>
+
 
         <!-- CATEGORY NAV -->
         <nav class="bg-dark">
@@ -106,16 +143,7 @@
 </a></li>
 
                     @endforeach
-                    <li><a href="#" class="hover:text-primary font-medium">ओडिशा</a></li>
-                    <li><a href="#" class="hover:text-primary font-medium">राष्ट्रीय</a></li>
-                    <li><a href="#" class="hover:text-primary font-medium">अंतर्राष्ट्रीय</a></li>
-                    <li><a href="#" class="hover:text-primary font-medium">खेल</a></li>
-                    <li><a href="#" class="hover:text-primary font-medium">मनोरंजन</a></li>
-                    <li><a href="#" class="hover:text-primary font-medium">व्यापार</a></li>
-                    <li><a href="#" class="hover:text-primary font-medium">राजनीति</a></li>
-                    <li><a href="#" class="hover:text-primary font-medium">शिक्षा</a></li>
-                    <li><a href="#" class="hover:text-primary font-medium">स्वास्थ्य</a></li>
-                    <li><a href="#" class="hover:text-primary font-medium">तकनीक</a></li>
+                   
                 </ul>
             </div>
         </nav>
@@ -126,8 +154,12 @@
         <div class="container mx-auto px-4 flex items-center">
             <span class="mr-3 font-bold whitespace-nowrap bg-red-800 px-2 py-1 rounded">ताज़ा खबर:</span>
             <div class="marquee-container w-full">
-                <div class="marquee-content text-sm">
-                    ओडिशा में नया मंत्रिमंडल गठित | भारत ने क्रिकेट विश्व कप जीता | कोरोना के नए वेरिएंट पर स्वास्थ्य मंत्रालय की एडवाइजरी | भुवनेश्वर में नए फ्लाईओवर का उद्घाटन | ओडिशा के खिलाड़ी ने जीता स्वर्ण पदक
+                <div class="marquee-content text-sm text-white">
+                    @foreach($breakingNews as $news)
+                    <p class="text-white-800 font-bold inline-block">
+                        {{ $news->title }} &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+                    </p>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -142,45 +174,83 @@
     <footer class="bg-gray-800 text-white mt-12 py-10">
         <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
 
-            <div>
-                <h3 class="text-xl font-bold mb-4">PRAMEYA NEWS7</h3>
-                <p class="text-gray-400 text-sm">ओडिशा का सबसे विश्वसनीय समाचार स्रोत। ताज़ा खबरें, ब्रेकिंग न्यूज और विश्लेषण।</p>
-                <div class="flex space-x-4 mt-4">
-                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-youtube"></i></a>
-                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div>
+           <div>
+    <!-- Logo Image -->
+    <div class="mb-2">
+        <h3 class="text-xl font-bold mb-2">{{$footerlogo->title}}</h3>
+        <img src="{{ $footerlogo->upload_image?->getUrl() ?? 'https://via.placeholder.com/150x50' }}" 
+             alt="{{ $footerlogo->title ?? 'Logo' }}" 
+             class="w-60 h-40 ">
+    </div>
+
+    <p class="text-gray-400 text-sm">{{ $footerlogo->description }}</p>
+    
+    <div class="flex space-x-4 mt-4">
+        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-youtube"></i></a>
+        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
+    </div>
+</div>
+
+
+          <div>
+    <h4 class="font-bold mb-4">कैटेगरी</h4>
+    <ul class="grid grid-cols-2 gap-y-1 text-gray-300 text-sm">
+        @foreach($categories as $cat)
+            <li>
+                <a href="{{ route('category.posts', $cat->slug) }}" class="hover:text-white">
+                    {{ $cat->name }}
+                </a>
+            </li>
+        @endforeach
+    </ul>
+</div>
+
 
             <div>
-                <h4 class="font-bold mb-4">कैटेगरी</h4>
+                <h4 class="font-bold mb-4">Links</h4>
                 <ul class="space-y-1 text-gray-300 text-sm">
-                    <li><a href="#" class="hover:text-white">मुख्य समाचार</a></li>
-                    <li><a href="#" class="hover:text-white">ओडिशा</a></li>
-                    <li><a href="#" class="hover:text-white">राष्ट्रीय</a></li>
-                    <li><a href="#" class="hover:text-white">खेल</a></li>
-                    <li><a href="#" class="hover:text-white">मनोरंजन</a></li>
+                    <li><a href="#" class="hover:text-white">Home</a></li>
+                    <li><a href="#" class="hover:text-white">About</a></li>
+                    <li><a href="#" class="hover:text-white">Contact</a></li>
+                    <li><a href="#" class="hover:text-white">Gallery</a></li>
+                    
                 </ul>
             </div>
 
-            <div>
-                <h4 class="font-bold mb-4">लिंक्स</h4>
-                <ul class="space-y-1 text-gray-300 text-sm">
-                    <li><a href="#" class="hover:text-white">हमारे बारे में</a></li>
-                    <li><a href="#" class="hover:text-white">संपर्क करें</a></li>
-                    <li><a href="#" class="hover:text-white">गोपनीयता नीति</a></li>
-                    <li><a href="#" class="hover:text-white">विज्ञापन दें</a></li>
-                    <li><a href="#" class="hover:text-white">करियर</a></li>
-                </ul>
-            </div>
+           <div>
+    <h4 class="font-bold mb-4">संपर्क करें</h4>
+    <!-- Contact Info with Links -->
+    <p class="text-gray-300 text-sm mb-2">
+        <a href="mailto:{{$contactDetails->email}}" class="hover:underline">
+            Email: {{$contactDetails->email}}
+        </a>
+    </p>
+    <p class="text-gray-300 text-sm">
+        <a href="tel:{{$contactDetails->number}}" class="hover:underline">
+            Phone: {{$contactDetails->number}}
+        </a>
+    </p>
+    <p class="text-gray-300 text-sm mb-2">
+        Address: {{$contactDetails->address}}
+    </p>
+    
+    <!-- Embedded Google Map -->
+    <div class="mb-2">
+        <iframe 
+            src="https://www.google.com/maps?q={{ urlencode($contactDetails->address) }}&output=embed" 
+            width="100%" 
+            height="150" 
+            class="rounded-lg border-0" 
+            allowfullscreen="" 
+            loading="lazy">
+        </iframe>
+    </div>
 
-            <div>
-                <h4 class="font-bold mb-4">संपर्क करें</h4>
-                <p class="text-gray-300 text-sm mb-2">भुवनेश्वर, ओडिशा</p>
-                <p class="text-gray-300 text-sm mb-2">Email: info@prameyanews.com</p>
-                <p class="text-gray-300 text-sm">Phone: +91-XXXX-XXXXXX</p>
-            </div>
+    
+</div>
+
         </div>
 
         <div class="border-t border-gray-700 mt-6 text-center py-4 text-gray-400 text-sm">
