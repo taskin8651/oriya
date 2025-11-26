@@ -114,22 +114,87 @@
         <!-- LEFT AREA -->
         <div class=" lg:col-span-6 ">
 
-            <!-- FEATURED TOP -->
-            <div class="rounded-lg overflow-hidden shadow-lg relative news-card">
-                <img src="https://dummyimage.com/900x500/4a5568/ffffff&text=ओडिशा+में+नया+मंत्रिमंडल+गठित" class="w-full h-72 md:h-96 object-cover">
+        @php
+$slides = $crousels->map(function($c) {
+    return [
+        'url' => $c->upload_image ? $c->upload_image->url : 'https://dummyimage.com/900x500/4a5568/ffffff&text=No+Image',
+        'title' => $c->title,
+        'description' => $c->description,
+        'label' => 'मुख्य समाचार',
+        'type' => 'image', // future me video bhi add ho sakta hai
+    ];
+})->values()->toArray();
+@endphp
 
-                <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black to-transparent">
-                    <span class="bg-primary text-white px-2 py-1 text-xs rounded">मुख्य समाचार</span>
+<div x-data="carousel(@js($slides))" x-init="init()" class="relative overflow-hidden rounded-lg shadow-lg max-w-6xl mx-auto h-72 md:h-96">
+    <!-- Slides -->
+    <template x-for="(slide, index) in slides" :key="index">
+        <div 
+            x-show="active === index" 
+            x-transition:enter="transition ease-out duration-700" 
+            x-transition:enter-start="opacity-0 scale-95" 
+            x-transition:enter-end="opacity-100 scale-100"
+            x-transition:leave="transition ease-in duration-500" 
+            x-transition:leave-start="opacity-100 scale-100" 
+            x-transition:leave-end="opacity-0 scale-95"
+            class="absolute inset-0 w-full h-full"
+        >
+            <template x-if="slide.type==='image'">
+                <img :src="slide.url" :alt="slide.title" class="w-full h-full object-cover">
+            </template>
+            <template x-if="slide.type==='video'">
+                <video :src="slide.url" controls autoplay class="w-full h-full object-cover"></video>
+            </template>
 
-                    <h2 class="text-2xl md:text-3xl font-bold text-white mt-3 leading-tight">
-                        ओडिशा में नया मंत्रिमंडल गठित – 12 मंत्रियों को शपथ
-                    </h2>
-
-                    <p class="text-gray-300 mt-2 text-sm">
-                        राज्यपाल भवन में आयोजित समारोह में मुख्यमंत्री ने नए मंत्रियों को शपथ दिलाई। नए मंत्रिमंडल में 8 कैबिनेट मंत्री और 4 राज्य मंत्री शामिल हैं।
-                    </p>
-                </div>
+            <!-- Caption -->
+            <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/70 to-transparent">
+                <span class="bg-yellow-500 text-black px-2 py-1 text-xs rounded" x-text="slide.label"></span>
+                <h2 class="text-2xl md:text-3xl font-bold text-white mt-3 leading-tight" x-text="slide.title"></h2>
+                <p class="text-gray-300 mt-2 text-sm" x-text="slide.description"></p>
             </div>
+        </div>
+    </template>
+
+    <!-- Prev / Next Buttons -->
+    <button @click="prev" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white rounded-full px-3 py-2 z-50 hover:bg-black/70 transition">&#10094;</button>
+    <button @click="next" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white rounded-full px-3 py-2 z-50 hover:bg-black/70 transition">&#10095;</button>
+
+    <!-- Dots -->
+    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+        <template x-for="(slide, index) in slides" :key="index">
+            <div @click="active = index" class="w-3 h-3 rounded-full cursor-pointer transition"
+                 :class="{'bg-yellow-500': active === index, 'bg-white/50': active !== index}"></div>
+        </template>
+    </div>
+</div>
+
+<script src="https://unpkg.com/alpinejs@3.13.2/dist/cdn.min.js" defer></script>
+<script>
+function carousel(slides) {
+    return {
+        active: 0,
+        slides: slides,
+        startX: 0,
+        endX: 0,
+        next() { this.active = (this.active + 1) % this.slides.length; },
+        prev() { this.active = (this.active - 1 + this.slides.length) % this.slides.length; },
+        init() {
+            // Auto slide
+            setInterval(() => this.next(), 5000);
+
+            // Swipe support for mobile
+            const el = this.$el;
+            el.addEventListener('touchstart', (e) => { this.startX = e.touches[0].clientX; });
+            el.addEventListener('touchend', (e) => {
+                this.endX = e.changedTouches[0].clientX;
+                if (this.startX - this.endX > 50) this.next();
+                if (this.endX - this.startX > 50) this.prev();
+            });
+        }
+    }
+}
+</script>
+
 
             <!-- GRID NEWS -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">

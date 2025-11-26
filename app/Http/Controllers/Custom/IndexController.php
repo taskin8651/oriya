@@ -7,6 +7,7 @@ use App\Models\Post;
 use App\Models\Category;
 use App\Models\Ad;
 use App\Models\Gallery;
+use App\Models\Crousel;
 
 class IndexController extends Controller
 {
@@ -53,8 +54,8 @@ class IndexController extends Controller
     }])
     ->orderBy('name')
     ->get();
-    
+      $crousels = Crousel::all();
         
-        return view('custom.index', compact('odishaPosts', 'sidebarAd', 'latestPosts', 'latest12', 'youtubeVideos','categories'));
+        return view('custom.index', compact('odishaPosts', 'sidebarAd', 'latestPosts', 'latest12', 'youtubeVideos','categories','crousels'));
     }
 }

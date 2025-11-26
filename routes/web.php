@@ -1,4 +1,5 @@
 <?php
+    use App\Http\Controllers\Custom\EpaperController;
 
 Route::redirect('/', '/login');
 Route::get('/home', function () {
@@ -190,3 +191,19 @@ Route::get('/category/{slug}', [App\Http\Controllers\Custom\PostController::clas
 
 Route::post('/newsletter/subscribe', [App\Http\Controllers\Custom\NewsLetterController::class, 'subscribe'])
     ->name('newsletter.subscribe');
+
+
+Route::get('/epaper', [App\Http\Controllers\Custom\EpaperController::class, 'index'])->name('epaper.index');
+Route::get('/epaper/{epaper}', [App\Http\Controllers\Custom\EpaperController::class, 'show'])->name('custom.epaper-detail');
+Route::get('/pdf-view/{media}', function ($media) {
+    $file = \Spatie\MediaLibrary\MediaCollections\Models\Media::findOrFail($media);
+    $path = storage_path("app/public/{$file->id}/{$file->file_name}");
+
+    return response()->file($path, [
+        'Content-Type' => 'application/pdf',
+        'Cross-Origin-Resource-Policy' => 'cross-origin',
+    ]);
+})->name('pdf.view');
+
+
+Route::get('/gallery', [App\Http\Controllers\Custom\GalleryController::class, 'index'])->name('custom.gallery');

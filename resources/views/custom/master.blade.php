@@ -96,7 +96,7 @@
 <script>
 document.addEventListener("DOMContentLoaded", function() {
   // 1️⃣ Auto add data-translate="true" to all relevant elements
-  const elementsToTranslate = document.querySelectorAll("li, p, span, a, h1, h2, h3, h4, h5, h6, div,b");
+  const elementsToTranslate = document.querySelectorAll("li, p, span, a, h1, h2, h3, h4, h5, h6, div,b, strong, button");
   elementsToTranslate.forEach(el => {
     if(el.innerText.trim() !== "") {
       el.dataset.translate = "true";
