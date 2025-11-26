@@ -223,12 +223,12 @@
     <h4 class="font-bold mb-4">संपर्क करें</h4>
     <!-- Contact Info with Links -->
     <p class="text-gray-300 text-sm mb-2">
-        <a href="mailto:{{$contactDetails->email}}" class="hover:underline">
+        <a href="mailto:{{$contactDetails->email ?? '-'}}" class="hover:underline">
             Email: {{$contactDetails->email ?? '--'}}
         </a>
     </p>
     <p class="text-gray-300 text-sm">
-        <a href="tel:{{$contactDetails->number}}" class="hover:underline">
+        <a href="tel:{{$contactDetails->number ?? '--'}}" class="hover:underline">
             Phone: {{$contactDetails->numbe0r ?? '--'}}
         </a>
     </p>
