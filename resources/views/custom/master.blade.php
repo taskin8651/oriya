@@ -173,45 +173,45 @@ document.addEventListener("DOMContentLoaded", function() {
 
     <!-- HEADER LOGO + LIVE TV -->
     <header class="bg-white shadow">
-      <div class="container mx-auto px-4  flex items-center justify-between">
+      <div class="container mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0">
 
-     <!-- Left: Logo -->
+    <!-- Left: Logo -->
     <div class="flex-shrink-0">
-       <img src="{{ $headerlogo->upload_image?->getUrl() ?? 'https://via.placeholder.com/150x50' }}" 
-     alt="{{ $headerlogo->title ?? '--'  }} " class="h-12 md:h-16 object-contain">
-
+        <img src="{{ $headerlogo->upload_image?->getUrl() ?? 'https://via.placeholder.com/150x50' }}" 
+             alt="{{ $headerlogo->title ?? '--' }}" 
+             class="h-12 md:h-16 object-contain">
     </div>
 
     <!-- Center: Ad -->
-<div class="flex-1 flex justify-center ">
-    <div class="w-[328px] h-[42px] bg-gray-200 rounded-lg flex items-center justify-center text-gray-600 border border-dashed border-gray-400 overflow-hidden">
-        @if(isset($Banner) && $Banner->banner)
-            <a href="{{ $Banner->link ?? '#' }}" class="block w-full h-full">
-                <img src="{{ $Banner->banner->getUrl() }}"
-                     class="w-full h-full object-cover rounded-lg"
-                     alt="Advertisement">
-            </a>
-        @else
-            <div class="flex flex-col items-center justify-center h-full">
-                <i class="fa-solid fa-ad text-2xl mb-1"></i>
-                <p class="text-xs">विज्ञापन</p>
-            </div>
-        @endif
+    <div class="flex-1 flex justify-center w-full">
+        <div class="w-full max-w-[328px] h-[42px] bg-gray-200 rounded-lg flex items-center justify-center text-gray-600 border border-dashed border-gray-400 overflow-hidden">
+            @if(isset($Banner) && $Banner->banner)
+                <a href="{{ $Banner->link ?? '#' }}" class="block w-full h-full">
+                    <img src="{{ $Banner->banner->getUrl() }}"
+                         class="w-full h-full object-cover rounded-lg"
+                         alt="Advertisement">
+                </a>
+            @else
+                <div class="flex flex-col items-center justify-center h-full">
+                    <i class="fa-solid fa-ad text-2xl mb-1"></i>
+                    <p class="text-xs">विज्ञापन</p>
+                </div>
+            @endif
+        </div>
     </div>
-</div>
-
 
     <!-- Right: Buttons -->
-    <div class="flex items-center space-x-4 flex-shrink-0">
-        <a href="#" class="bg-primary text-white px-5 py-2 rounded-full font-semibold shadow hover:bg-red-700 flex items-center">
+    <div class="flex flex-wrap md:flex-nowrap items-center space-x-0 md:space-x-4 gap-2 md:gap-0 flex-shrink-0 justify-center md:justify-end w-full md:w-auto">
+        <a href="#" class="bg-primary text-white px-5 py-2 rounded-full font-semibold shadow hover:bg-red-700 flex items-center justify-center w-full md:w-auto">
             <i class="fa-solid fa-tv mr-2"></i> LIVE TV
         </a>
-        <a href="#" class="bg-gray-800 text-white px-5 py-2 rounded-full font-semibold shadow hover:bg-gray-900 flex items-center">
+        <a href="#" class="bg-gray-800 text-white px-5 py-2 rounded-full font-semibold shadow hover:bg-gray-900 flex items-center justify-center w-full md:w-auto">
             <i class="fa-solid fa-newspaper mr-2"></i> ePaper
         </a>
     </div>
 
 </div>
+
 
 
         <!-- CATEGORY NAV -->
