@@ -96,7 +96,7 @@
      <!-- Left: Logo -->
     <div class="flex-shrink-0">
        <img src="{{ $headerlogo->upload_image?->getUrl() ?? 'https://via.placeholder.com/150x50' }}" 
-     alt="{{ $headerlogo->title  }} " class="h-12 md:h-16 object-contain">
+     alt="{{ $headerlogo->title ?? '--'  }} " class="h-12 md:h-16 object-contain">
 
     </div>
 
@@ -177,13 +177,13 @@
            <div>
     <!-- Logo Image -->
     <div class="mb-2">
-        <h3 class="text-xl font-bold mb-2">{{$footerlogo->title}}</h3>
+        <h3 class="text-xl font-bold mb-2">{{$footerlogo->title ?? '--'}}</h3>
         <img src="{{ $footerlogo->upload_image?->getUrl() ?? 'https://via.placeholder.com/150x50' }}" 
              alt="{{ $footerlogo->title ?? 'Logo' }}" 
              class="w-60 h-40 ">
     </div>
 
-    <p class="text-gray-400 text-sm">{{ $footerlogo->description }}</p>
+    <p class="text-gray-400 text-sm">{{ $footerlogo->description ?? '--' }}</p>
     
     <div class="flex space-x-4 mt-4">
         <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
@@ -200,7 +200,7 @@
         @foreach($categories as $cat)
             <li>
                 <a href="{{ route('category.posts', $cat->slug) }}" class="hover:text-white">
-                    {{ $cat->name }}
+                    {{ $cat->name ?? '-' }}
                 </a>
             </li>
         @endforeach
@@ -224,22 +224,22 @@
     <!-- Contact Info with Links -->
     <p class="text-gray-300 text-sm mb-2">
         <a href="mailto:{{$contactDetails->email}}" class="hover:underline">
-            Email: {{$contactDetails->email}}
+            Email: {{$contactDetails->email ?? '--'}}
         </a>
     </p>
     <p class="text-gray-300 text-sm">
         <a href="tel:{{$contactDetails->number}}" class="hover:underline">
-            Phone: {{$contactDetails->number}}
+            Phone: {{$contactDetails->numbe0r ?? '--'}}
         </a>
     </p>
     <p class="text-gray-300 text-sm mb-2">
-        Address: {{$contactDetails->address}}
+        Address: {{$contactDetails->address ?? '--'}}
     </p>
     
     <!-- Embedded Google Map -->
     <div class="mb-2">
         <iframe 
-            src="https://www.google.com/maps?q={{ urlencode($contactDetails->address) }}&output=embed" 
+            src="https://www.google.com/maps?q={{ urlencode($contactDetails->address) ?? '--' }}&output=embed" 
             width="100%" 
             height="150" 
             class="rounded-lg border-0" 
