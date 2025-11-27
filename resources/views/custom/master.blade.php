@@ -77,13 +77,101 @@
     <div class="bg-white border-b">
         <div class="container mx-auto px-4 py-2 flex justify-between text-sm">
             <div class="text-gray-500 flex items-center space-x-4">
-                <span><i class="fa-regular fa-clock mr-1"></i> 24 जून, 2024 | सोमवार</span>
-                <span><i class="fa-solid fa-location-dot mr-1"></i> भुवनेश्वर</span>
+                <span id="userTime"></span>
+<script>
+    function updateTime() {
+        const now = new Date();
+
+        const options = {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+            weekday: 'short',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        };
+
+        document.getElementById("userTime").innerText =
+            now.toLocaleString('hi-IN', options);
+    }
+
+    // Call once
+    updateTime();
+
+    // Update every second (so time continues)
+    setInterval(updateTime, 1000);
+</script>
+
+
             </div>
 
             <div class="flex items-center space-x-4">
-                <button class="hover:text-primary"><i class="fa-solid fa-search"></i></button>
-                <button class="hover:text-primary"><i class="fa-regular fa-user"></i></button>
+                <button onclick="openSearch()" class="hover:text-primary">
+    <i class="fa-solid fa-search"></i>
+</button>
+
+<!-- SEARCH POPUP OVERLAY -->
+<div id="searchPopup" class="fixed inset-0 bg-black bg-opacity-60 hidden flex items-center justify-center z-50">
+    <div class="bg-white rounded-xl p-6 w-full max-w-xl relative">
+
+        <!-- Close Button -->
+        <button onclick="closeSearch()" class="absolute top-3 right-3 text-gray-500 hover:text-black text-xl">
+            &times;
+        </button>
+
+        <!-- Search Input -->
+        <input 
+            type="text"
+            id="searchInput"
+            class="w-full border border-gray-300 p-3 rounded-lg outline-none"
+            placeholder="Search (News, Title, Content)..."
+            onkeyup="liveSearch(this.value)"
+        >
+
+        <!-- Results -->
+        <div id="searchResults" class="mt-4 max-h-60 overflow-auto"></div>
+    </div>
+</div>
+<script>
+function openSearch() {
+    document.getElementById("searchPopup").classList.remove("hidden");
+    document.getElementById("searchInput").focus();
+}
+
+function closeSearch() {
+    document.getElementById("searchPopup").classList.add("hidden");
+}
+
+function liveSearch(query) {
+    if (query.length < 2) {
+        document.getElementById("searchResults").innerHTML = "";
+        return;
+    }
+
+    fetch(`/live-search?q=${query}`)
+        .then(res => res.json())
+        .then(data => {
+            let html = '';
+
+            if (data.length === 0) {
+                html = `<p class="text-gray-500">No results found</p>`;
+            } else {
+                data.forEach(item => {
+                    html += `
+                        <a href="/post/${item.slug}" class="block p-2 border-b hover:bg-gray-100">
+                            <strong>${item.title}</strong>
+                        </a>
+                    `;
+                });
+            }
+
+            document.getElementById("searchResults").innerHTML = html;
+        });
+}
+</script>
+
+                <!-- <button class="hover:text-primary"><i class="fa-regular fa-user"></i></button> -->
                 
 
 <select id="lang">
@@ -202,10 +290,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     <!-- Right: Buttons -->
     <div class="flex flex-wrap md:flex-nowrap items-center space-x-0 md:space-x-4 gap-2 md:gap-0 flex-shrink-0 justify-center md:justify-end w-full md:w-auto">
-        <a href="#" class="bg-primary text-white px-5 py-2 rounded-full font-semibold shadow hover:bg-red-700 flex items-center justify-center w-full md:w-auto">
-            <i class="fa-solid fa-tv mr-2"></i> LIVE TV
+        <a href="/gallery" class="bg-primary text-white px-5 py-2 rounded-full font-semibold shadow hover:bg-red-700 flex items-center justify-center w-full md:w-auto">
+            <i class="fa-solid fa-tv mr-2"></i> Gallery
         </a>
-        <a href="#" class="bg-gray-800 text-white px-5 py-2 rounded-full font-semibold shadow hover:bg-gray-900 flex items-center justify-center w-full md:w-auto">
+        <a href="/epaper" class="bg-gray-800 text-white px-5 py-2 rounded-full font-semibold shadow hover:bg-gray-900 flex items-center justify-center w-full md:w-auto">
             <i class="fa-solid fa-newspaper mr-2"></i> ePaper
         </a>
     </div>
@@ -234,7 +322,7 @@ document.addEventListener("DOMContentLoaded", function() {
     <!-- BREAKING NEWS TICKER -->
     <div class="bg-primary text-white py-2">
         <div class="container mx-auto px-4 flex items-center">
-            <span class="mr-3 font-bold whitespace-nowrap bg-red-800 px-2 py-1 rounded">ताज़ा खबर:</span>
+            <span class="mr-3 font-bold whitespace-nowrap bg-red-800 px-2 py-1 rounded">Breaking News</span>
             <div class="marquee-container w-full">
                 <div class="marquee-content text-sm text-white">
                     @foreach($breakingNews as $news)
@@ -277,7 +365,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
           <div>
-    <h4 class="font-bold mb-4">कैटेगरी</h4>
+    <h4 class="font-bold mb-4">Category</h4>
     <ul class="grid grid-cols-2 gap-y-1 text-gray-300 text-sm">
         @foreach($categories as $cat)
             <li>
@@ -293,10 +381,10 @@ document.addEventListener("DOMContentLoaded", function() {
             <div>
                 <h4 class="font-bold mb-4">Links</h4>
                 <ul class="space-y-1 text-gray-300 text-sm">
-                    <li><a href="#" class="hover:text-white">Home</a></li>
-                    <li><a href="#" class="hover:text-white">About</a></li>
-                    <li><a href="#" class="hover:text-white">Contact</a></li>
-                    <li><a href="#" class="hover:text-white">Gallery</a></li>
+                    <li><a href="/" class="hover:text-white">Home</a></li>
+                    <!-- <li><a href="/post" class="hover:text-white">News</a></li> -->
+                    <li><a href="/epaper" class="hover:text-white">ePaper</a></li>
+                    <li><a href="/galler" class="hover:text-white">Gallery</a></li>
                     
                 </ul>
             </div>

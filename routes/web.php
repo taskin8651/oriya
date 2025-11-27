@@ -188,6 +188,8 @@ Route::get('/',[App\Http\Controllers\Custom\IndexController::class,'index']);
 Route::get('/post/{slug}',[App\Http\Controllers\Custom\PostController::class,'postDetails'])->name('post.details');
 Route::get('/category/{slug}', [App\Http\Controllers\Custom\PostController::class, 'index'])
         ->name('category.posts');
+        Route::get('/live-search', [App\Http\Controllers\Custom\PostController::class, 'liveSearch']);
+
 
 Route::post('/newsletter/subscribe', [App\Http\Controllers\Custom\NewsLetterController::class, 'subscribe'])
     ->name('newsletter.subscribe');

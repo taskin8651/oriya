@@ -100,4 +100,18 @@ class PostController extends Controller
 }
 
 
+public function liveSearch(Request $request)
+{
+    $q = $request->q;
+
+    $posts = \App\Models\Post::where('title', 'LIKE', "%$q%")
+        ->orWhere('content', 'LIKE', "%$q%")
+        ->select('title', 'slug')
+        ->limit(10)
+        ->get();
+
+    return response()->json($posts);
+}
+
+
 }
