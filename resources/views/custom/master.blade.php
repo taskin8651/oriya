@@ -409,7 +409,7 @@ document.addEventListener("DOMContentLoaded", function() {
     <!-- Embedded Google Map -->
     <div class="mb-2">
         <iframe
-    src="https://www.google.com/maps?q={{ $contactDetails->address ? urlencode($contactDetails->address) : '' }}&output=embed"
+    src="https://www.google.com/maps?q={{ $contactDetails?->location_url ?? '' }}&output=embed"
     width="100%"
     height="150"
     class="rounded-lg border-0"
