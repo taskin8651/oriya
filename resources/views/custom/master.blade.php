@@ -384,7 +384,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     <li><a href="/" class="hover:text-white">Home</a></li>
                     <!-- <li><a href="/post" class="hover:text-white">News</a></li> -->
                     <li><a href="/epaper" class="hover:text-white">ePaper</a></li>
-                    <li><a href="/gallery" class="hover:text-white">Gallerys</a></li>
+                    <li><a href="/gallery" class="hover:text-white">Gallery</a></li>
                     
                 </ul>
             </div>
