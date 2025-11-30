@@ -26,7 +26,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prameya News - Odisha's Leading News Portal</title>
+    <title>Biplabi Parikrama</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -209,23 +209,19 @@ document.addEventListener("DOMContentLoaded", function() {
                 class="h-12 md:h-16 object-contain">
         </div>
 
-        <!-- Center: Ad -->
-        <div class="flex-1 flex justify-center w-full">
-            <div class="w-full max-w-[328px] h-[42px] bg-gray-200 rounded-lg flex items-center justify-center text-gray-600 border border-dashed border-gray-400 overflow-hidden">
-                @if(isset($Banner) && $Banner->banner)
-                    <a href="{{ $Banner->link ?? '#' }}" class="block w-full h-full">
-                        <img src="{{ $Banner->banner->getUrl() }}"
-                            class="w-full h-full object-cover rounded-lg"
-                            alt="Advertisement">
-                    </a>
-                @else
-                    <div class="flex flex-col items-center justify-center h-full">
-                        <i class="fa-solid fa-ad text-2xl mb-1"></i>
-                        <p class="text-xs">विज्ञापन</p>
-                    </div>
-                @endif
-            </div>
-        </div>
+       <!-- Center: Ad -->
+@isset($Banner->banner)
+<div class="flex-1 flex justify-center w-full">
+    <div class="w-full max-w-[328px] h-[42px] bg-gray-200 rounded-lg flex items-center justify-center text-gray-600 border border-dashed border-gray-400 overflow-hidden">
+        <a href="{{ $Banner->link ?? '#' }}" class="block w-full h-full">
+            <img src="{{ $Banner->banner->getUrl() }}"
+                class="w-full h-full object-cover rounded-lg"
+                alt="Advertisement">
+        </a>
+    </div>
+</div>
+@endisset
+
 
         <!-- Right: Buttons + Social -->
         <div class="flex flex-col md:flex-row items-center gap-3 md:gap-4 w-full md:w-auto">
