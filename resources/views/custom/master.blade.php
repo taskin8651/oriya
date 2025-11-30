@@ -73,47 +73,36 @@
 
 <body class="bg-gray-50">
 
-    <!-- TOP BAR -->
-    <div class="bg-white border-b">
-        <div class="container mx-auto px-4 py-2 flex justify-between text-sm">
-            <div class="text-gray-500 flex items-center space-x-4">
-                <span id="userTime"></span>
-<script>
-    function updateTime() {
-        const now = new Date();
+  <!-- TOP BAR -->
+<div class="bg-white border-b">
+    <div class="container mx-auto px-4 py-2 flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
 
-        const options = {
-            day: 'numeric',
-            month: 'short',
-            year: 'numeric',
-            weekday: 'short',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-        };
+        <!-- Left: Time -->
+        <div class="flex items-center space-x-4 text-gray-500 text-sm">
+            <span id="userTime"></span>
+        </div>
 
-        document.getElementById("userTime").innerText =
-            now.toLocaleString('hi-IN', options);
-    }
+        <!-- Right: Search + Language -->
+        <div class="flex items-center space-x-4">
 
-    // Call once
-    updateTime();
+            <!-- Search Button -->
+            <button onclick="openSearch()" class="hover:text-primary text-lg md:text-base">
+                <i class="fa-solid fa-search"></i>
+            </button>
 
-    // Update every second (so time continues)
-    setInterval(updateTime, 1000);
-</script>
-
-
-            </div>
-
-            <div class="flex items-center space-x-4">
-                <button onclick="openSearch()" class="hover:text-primary">
-    <i class="fa-solid fa-search"></i>
-</button>
+            <!-- Language Menu -->
+            <ul id="langList" class="lang-menu flex gap-2 md:gap-4 list-none p-0 m-0">
+                <li data-lang="or" class="px-3 py-1 bg-gray-200 rounded-md cursor-pointer hover:bg-gray-300">ଓଡିଆ</li>
+                <li data-lang="en" class="px-3 py-1 bg-gray-200 rounded-md cursor-pointer hover:bg-gray-300">English</li>
+                <li data-lang="hi" class="px-3 py-1 bg-gray-200 rounded-md cursor-pointer hover:bg-gray-300">हिन्दी</li>
+            </ul>
+        </div>
+    </div>
+</div>
 
 <!-- SEARCH POPUP OVERLAY -->
-<div id="searchPopup" class="fixed inset-0 bg-black bg-opacity-60 hidden flex items-center justify-center z-50">
-    <div class="bg-white rounded-xl p-6 w-full max-w-xl relative">
+<div id="searchPopup" class="fixed inset-0 bg-black bg-opacity-60 hidden flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-xl w-full max-w-lg p-6 relative">
 
         <!-- Close Button -->
         <button onclick="closeSearch()" class="absolute top-3 right-3 text-gray-500 hover:text-black text-xl">
@@ -133,191 +122,260 @@
         <div id="searchResults" class="mt-4 max-h-60 overflow-auto"></div>
     </div>
 </div>
-<script>
-function openSearch() {
-    document.getElementById("searchPopup").classList.remove("hidden");
-    document.getElementById("searchInput").focus();
-}
 
-function closeSearch() {
-    document.getElementById("searchPopup").classList.add("hidden");
+<style>
+.lang-menu li {
+  list-style: none;
+  cursor: pointer;
+  transition: background 0.2s;
 }
+.lang-menu li:hover {
+  background-color: #ddd;
+}
+</style>
+
+<script>
+function updateTime() {
+    const now = new Date();
+    const options = { day:'numeric', month:'short', year:'numeric', weekday:'short', hour:'2-digit', minute:'2-digit', second:'2-digit' };
+    document.getElementById("userTime").innerText = now.toLocaleString('hi-IN', options);
+}
+updateTime();
+setInterval(updateTime, 1000);
+
+function openSearch() { document.getElementById("searchPopup").classList.remove("hidden"); document.getElementById("searchInput").focus(); }
+function closeSearch() { document.getElementById("searchPopup").classList.add("hidden"); }
 
 function liveSearch(query) {
-    if (query.length < 2) {
-        document.getElementById("searchResults").innerHTML = "";
-        return;
-    }
-
-    fetch(`/live-search?q=${query}`)
-        .then(res => res.json())
-        .then(data => {
-            let html = '';
-
-            if (data.length === 0) {
-                html = `<p class="text-gray-500">No results found</p>`;
-            } else {
-                data.forEach(item => {
-                    html += `
-                        <a href="/post/${item.slug}" class="block p-2 border-b hover:bg-gray-100">
-                            <strong>${item.title}</strong>
-                        </a>
-                    `;
-                });
-            }
-
-            document.getElementById("searchResults").innerHTML = html;
-        });
-}
-</script>
-
-                <!-- <button class="hover:text-primary"><i class="fa-regular fa-user"></i></button> -->
-                
-
-<select id="lang">
-  <option value="or" selected>Odia</option>
-  <option value="en">English</option>
-  <option value="hi">Hindi</option>
-  <option value="fr">French</option>
-</select>
-
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  // 1️⃣ Auto add data-translate="true" to all relevant elements
-  const elementsToTranslate = document.querySelectorAll("li, p, span, a, h1, h2, h3, h4, h5, h6, div,b, strong, button");
-  elementsToTranslate.forEach(el => {
-    if(el.innerText.trim() !== "") {
-      el.dataset.translate = "true";
-    }
-  });
-
-  // 2️⃣ Now select all elements with data-translate
-  const elements = document.querySelectorAll("[data-translate='true']");
-  const API_KEY = "AIzaSyAf4GFPHe6nTBL19AC-3cRyFwv42R8CwsQ"; // ⚠️ Only for testing
-
-  // Store original text nodes
-  elements.forEach(el => {
-    if (!el.dataset.originalTextNodes) {
-      const textNodes = [];
-      el.childNodes.forEach(node => {
-        if (node.nodeType === Node.TEXT_NODE && node.textContent.trim() !== "") {
-          textNodes.push(node.textContent.trim());
-        }
-      });
-      el.dataset.originalTextNodes = JSON.stringify(textNodes);
-    }
-  });
-
-  const translateNow = async (targetLang) => {
-    const allTexts = [];
-    elements.forEach(el => {
-      const nodes = JSON.parse(el.dataset.originalTextNodes);
-      allTexts.push(...nodes);
+    if(query.length < 2){ document.getElementById("searchResults").innerHTML = ""; return; }
+    fetch(`/live-search?q=${query}`).then(res=>res.json()).then(data=>{
+        let html = '';
+        if(data.length === 0){ html = `<p class="text-gray-500">No results found</p>`; }
+        else { data.forEach(item=>{ html+=`<a href="/post/${item.slug}" class="block p-2 border-b hover:bg-gray-100"><strong>${item.title}</strong></a>` }) }
+        document.getElementById("searchResults").innerHTML = html;
     });
+}
 
-    try {
-      const url = "https://translation.googleapis.com/language/translate/v2?key=" + API_KEY;
-      const response = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ q: allTexts, target: targetLang })
+// Translation
+document.addEventListener("DOMContentLoaded", function() {
+  const skipTranslation = document.querySelector(".no-translate");
+  const elementsToTranslate = document.querySelectorAll("li, p, span, a, h1, h2, h3, h4, h5, h6, div, b, strong, button");
+  elementsToTranslate.forEach(el => { if(skipTranslation?.contains(el)) return; if(el.innerText.trim()!=="") el.dataset.translate="true"; });
+
+  const elements = document.querySelectorAll("[data-translate='true']");
+  const API_KEY = "AIzaSyAf4GFPHe6nTBL19AC-3cRyFwv42R8CwsQ";
+
+  elements.forEach(el => { if(!el.dataset.originalTextNodes){ const nodes=[]; el.childNodes.forEach(node=>{ if(node.nodeType===Node.TEXT_NODE && node.textContent.trim()!=="") nodes.push(node.textContent.trim()); }); el.dataset.originalTextNodes=JSON.stringify(nodes); } });
+
+  const translateNow = async targetLang=>{
+    const allTexts=[];
+    elements.forEach(el=>{ allTexts.push(...JSON.parse(el.dataset.originalTextNodes)) });
+
+    try{
+      const res = await fetch(`https://translation.googleapis.com/language/translate/v2?key=${API_KEY}`, {
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({q:allTexts,target:targetLang})
       });
-      const data = await response.json();
-      const translations = data.data?.translations?.map(t => t.translatedText) || [];
-
-      // Map translations back to elements
-      let counter = 0;
-      elements.forEach(el => {
-        const nodes = JSON.parse(el.dataset.originalTextNodes);
-        el.childNodes.forEach(node => {
-          if (node.nodeType === Node.TEXT_NODE && node.textContent.trim() !== "") {
-            node.textContent = " " + (translations[counter] || nodes[counter]);
-            counter++;
-          }
+      const data = await res.json();
+      const translations = data.data?.translations?.map(t=>t.translatedText)||[];
+      let counter=0;
+      elements.forEach(el=>{
+        const nodes=JSON.parse(el.dataset.originalTextNodes);
+        el.childNodes.forEach(node=>{
+          if(node.nodeType===Node.TEXT_NODE && node.textContent.trim()!==""){ node.textContent=" "+(translations[counter]||nodes[counter]); counter++; }
         });
       });
+    } catch(e){ console.error("Translation failed:", e); }
+  }
 
-    } catch (err) {
-      console.error("Translation failed:", err);
-      alert("Translation failed!");
-    }
-  };
-
-  // Default translate to Odia
   translateNow("or");
 
-  // Auto translate on dropdown change
-  const langSelect = document.getElementById("lang");
-  if(langSelect){
-    langSelect.addEventListener("change", function () {
-      translateNow(this.value);
-    });
-  }
+  document.querySelectorAll("#langList li").forEach(item=>{
+    item.addEventListener("click",function(){ const lang=this.getAttribute("data-lang"); translateNow(lang); });
+  });
+
 });
 </script>
+
+  <!-- HEADER LOGO + LIVE TV -->
+<header class="bg-white shadow">
+
+    <div class="container mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0">
+
+        <!-- Left: Logo -->
+        <div class="flex-shrink-0">
+            <img src="{{ $headerlogo->upload_image?->getUrl() ?? 'https://via.placeholder.com/150x50' }}" 
+                alt="{{ $headerlogo->title ?? '--' }}" 
+                class="h-12 md:h-16 object-contain">
+        </div>
+
+        <!-- Center: Ad -->
+        <div class="flex-1 flex justify-center w-full">
+            <div class="w-full max-w-[328px] h-[42px] bg-gray-200 rounded-lg flex items-center justify-center text-gray-600 border border-dashed border-gray-400 overflow-hidden">
+                @if(isset($Banner) && $Banner->banner)
+                    <a href="{{ $Banner->link ?? '#' }}" class="block w-full h-full">
+                        <img src="{{ $Banner->banner->getUrl() }}"
+                            class="w-full h-full object-cover rounded-lg"
+                            alt="Advertisement">
+                    </a>
+                @else
+                    <div class="flex flex-col items-center justify-center h-full">
+                        <i class="fa-solid fa-ad text-2xl mb-1"></i>
+                        <p class="text-xs">विज्ञापन</p>
+                    </div>
+                @endif
             </div>
         </div>
-    </div>
 
-    <!-- HEADER LOGO + LIVE TV -->
-    <header class="bg-white shadow">
-      <div class="container mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0">
+        <!-- Right: Buttons + Social -->
+        <div class="flex flex-col md:flex-row items-center gap-3 md:gap-4 w-full md:w-auto">
 
-    <!-- Left: Logo -->
-    <div class="flex-shrink-0">
-        <img src="{{ $headerlogo->upload_image?->getUrl() ?? 'https://via.placeholder.com/150x50' }}" 
-             alt="{{ $headerlogo->title ?? '--' }}" 
-             class="h-12 md:h-16 object-contain">
-    </div>
-
-    <!-- Center: Ad -->
-    <div class="flex-1 flex justify-center w-full">
-        <div class="w-full max-w-[328px] h-[42px] bg-gray-200 rounded-lg flex items-center justify-center text-gray-600 border border-dashed border-gray-400 overflow-hidden">
-            @if(isset($Banner) && $Banner->banner)
-                <a href="{{ $Banner->link ?? '#' }}" class="block w-full h-full">
-                    <img src="{{ $Banner->banner->getUrl() }}"
-                         class="w-full h-full object-cover rounded-lg"
-                         alt="Advertisement">
+            <!-- Buttons -->
+            <div class="flex flex-wrap md:flex-nowrap items-center space-x-0 md:space-x-4 gap-2 md:gap-0 justify-center">
+                <a href="/gallery" class="bg-primary text-white px-5 py-2 rounded-full font-semibold shadow hover:bg-red-700 flex items-center">
+                    <i class="fa-solid fa-tv mr-2"></i> Gallery
                 </a>
-            @else
-                <div class="flex flex-col items-center justify-center h-full">
-                    <i class="fa-solid fa-ad text-2xl mb-1"></i>
-                    <p class="text-xs">विज्ञापन</p>
-                </div>
-            @endif
+
+                <a href="/epaper" class="bg-gray-800 text-white px-5 py-2 rounded-full font-semibold shadow hover:bg-gray-900 flex items-center">
+                    <i class="fa-solid fa-newspaper mr-2"></i> ePaper
+                </a>
+            </div>
+
+            <!-- Social Media -->
+            <div class="flex items-center space-x-3 text-xl text-gray-700">
+                <a href="#" class="hover:text-primary"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="#" class="hover:text-primary"><i class="fa-brands fa-twitter"></i></a>
+                <a href="#" class="hover:text-primary"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" class="hover:text-primary"><i class="fa-brands fa-youtube"></i></a>
+                <a href="#" class="hover:text-primary"><i class="fa-brands fa-whatsapp"></i></a>
+            </div>
+
         </div>
+
+    </div>
+</header>
+
+<header class="bg-dark text-white shadow">
+
+    <!-- TOP MAIN NAV -->
+    <div class="container mx-auto px-4 flex items-center justify-between ">
+
+       
+
+
+        <!-- Mobile open button -->
+        <button id="menuToggle" class="md:hidden text-white text-2xl">
+            <i class="fa-solid fa-bars"></i>
+        </button>
     </div>
 
-    <!-- Right: Buttons -->
-    <div class="flex flex-wrap md:flex-nowrap items-center space-x-0 md:space-x-4 gap-2 md:gap-0 flex-shrink-0 justify-center md:justify-end w-full md:w-auto">
-        <a href="/gallery" class="bg-primary text-white px-5 py-2 rounded-full font-semibold shadow hover:bg-red-700 flex items-center justify-center w-full md:w-auto">
-            <i class="fa-solid fa-tv mr-2"></i> Gallery
+    <!-- CATEGORY NAV -->
+    <nav class="bg-dark relative border-t border-gray-700">
+        <div class="container mx-auto px-4">
+
+            <!-- Desktop Category Menu -->
+            <ul class="hidden md:flex items-center text-sm space-x-6 py-3 text-gray-200">
+                @foreach($categories as $category)
+                    <li>
+                        <a href="{{ route('category.posts', $category->slug) }}"
+                           class="hover:text-primary font-medium">
+                            {{ $category->name }}
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
+
+        </div>
+    </nav>
+</header>
+
+<!-- ───────── MOBILE DRAWER ───────── -->
+<div id="categoryDrawer"
+     class="fixed top-0 left-0 h-full w-64 bg-dark text-white transform -translate-x-full
+            transition-all duration-300 z-50 md:hidden shadow-lg">
+
+    <!-- Drawer Header -->
+    <div class="p-4 text-lg font-semibold border-b border-gray-700 flex justify-between items-center">
+
+        <!-- Logo -->
+        <a href="/" class="flex items-center">
+            <img src="{{ $headerlogo->upload_image?->getUrl() ?? 'https://via.placeholder.com/150x50' }}"
+                 alt="Logo" class="h-10 object-contain">
         </a>
-        <a href="/epaper" class="bg-gray-800 text-white px-5 py-2 rounded-full font-semibold shadow hover:bg-gray-900 flex items-center justify-center w-full md:w-auto">
-            <i class="fa-solid fa-newspaper mr-2"></i> ePaper
-        </a>
+
+        <button id="closeMenu" class="text-xl hover:text-primary">
+            <i class="fa-solid fa-times"></i>
+        </button>
     </div>
+
+    <!-- Drawer Links -->
+    <ul class="flex flex-col space-y-4 p-4 text-gray-200">
+
+        <!-- Static Menu -->
+        <li><a href="/" class="hover:text-primary font-medium block">Home</a></li>
+        <li><a href="/epaper" class="hover:text-primary font-medium block">E-Paper</a></li>
+        <li><a href="/gallery" class="hover:text-primary font-medium block">Gallery</a></li>
+
+        <hr class="border-gray-700">
+@php
+    $categoryCount = $categories->count(); // Total categories
+@endphp
+
+<ul class="flex flex-col space-y-4 p-4 text-gray-200">
+
+    <!-- Single clickable "Category" -->
+    <li class="flex flex-col">
+        <span id="toggleCategory" class="w-full flex justify-between items-center font-medium cursor-pointer">
+            Category ({{ $categoryCount }})
+            <i class="fa-solid fa-chevron-down transition-transform" id="categoryIcon"></i>
+        </span>
+
+        <!-- Hidden Category List -->
+        <ul id="categoryList" class="pl-4 mt-2 hidden space-y-2">
+            @foreach($categories as $category)
+                <li>
+                    <a href="{{ route('category.posts', $category->slug) }}" 
+                       class="block hover:text-primary text-sm">
+                        {{ $category->name }} ({{ $category->posts->count() }})
+                    </a>
+                </li>
+            @endforeach
+        </ul>
+    </li>
+
+</ul>
+
 
 </div>
+<script>
+    const menuToggle = document.getElementById("menuToggle");
+    const categoryDrawer = document.getElementById("categoryDrawer");
+    const closeMenu = document.getElementById("closeMenu");
+
+    // Open Drawer
+    menuToggle.addEventListener("click", () => {
+        categoryDrawer.classList.remove("-translate-x-full");
+    });
+
+    // Close Drawer
+    closeMenu.addEventListener("click", () => {
+        categoryDrawer.classList.add("-translate-x-full");
+    });
+
+    // Toggle Category List (single span)
+    const toggleCategory = document.getElementById("toggleCategory");
+    const categoryList = document.getElementById("categoryList");
+    const categoryIcon = document.getElementById("categoryIcon");
+
+    if (toggleCategory) {
+        toggleCategory.addEventListener("click", () => {
+            if (categoryList) categoryList.classList.toggle("hidden");
+            if (categoryIcon) categoryIcon.classList.toggle("rotate-180");
+        });
+    }
+</script>
 
 
-
-        <!-- CATEGORY NAV -->
-        <nav class="bg-dark">
-            <div class="container mx-auto px-4">
-                <ul class="flex items-center text-sm overflow-x-auto space-x-6 py-3 text-gray-200">
-                    @foreach($categories as $category)
-
-                   <li><a href="{{ route('category.posts', $category->slug) }}" class="hover:text-primary font-medium">
-    {{ $category->name }}
-</a></li>
-
-                    @endforeach
-                   
-                </ul>
-            </div>
-        </nav>
-    </header>
 
     <!-- BREAKING NEWS TICKER -->
     <div class="bg-primary text-white py-2">
