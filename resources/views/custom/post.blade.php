@@ -119,23 +119,18 @@
     <!-- RIGHT COLUMN -->
     <div class="md:col-span-1">
            <!-- AD -->
+           @if(isset($sidebarAd) && $sidebarAd->banner)
 <div class="w-full bg-gray-200 rounded-lg flex items-center justify-center text-gray-600 border border-dashed border-gray-400 mt-3 overflow-hidden mb-3">
 
-    @if(isset($sidebarAd) && $sidebarAd->banner)
         <a href="{{ $sidebarAd->link ?? '#' }}" class="block w-full h-full">
             <img src="{{ $sidebarAd->banner->getUrl() }}"
                  class="w-full h-full object-cover rounded-lg"
                  alt="Advertisement">
         </a>
-    @else
-        <div class="h-64 flex flex-col items-center justify-center">
-            <i class="fa-solid fa-ad text-3xl mb-2"></i>
-            <p>विज्ञापन</p>
-            <p class="text-xs mt-1">300x250</p>
-        </div>
+    
+        
+    </div>
     @endif
-
-</div>
 
         @foreach($rightCategories as $cat)
             <h2 class="text-xl font-bold mb-4">{{ $cat->name }}</h2>
