@@ -254,15 +254,15 @@ function carousel(slides) {
     <div class="mt-4 overflow-hidden whitespace-nowrap">
         <marquee behavior="scroll" direction="up" scrollamount="3" height="250px">
             @foreach($latestPosts as $post)
+            <a href="{{ route('post.details', $post->slug) }}" class="font-semibold hover:text-primary">
                 <div class="pb-3 border-b mb-3">
-                    <a href="{{ route('post.details', $post->slug) }}" class="font-semibold hover:text-primary">
                         {{ $post->title }}
-                    </a>
-                    <p class="text-xs text-gray-500 mt-1">
-                        <i class="fa-regular fa-clock mr-1"></i>
-                        {{ $post->created_at->diffForHumans() }}
-                    </p>
-                </div>
+                        <p class="text-xs text-gray-500 mt-1">
+                            <i class="fa-regular fa-clock mr-1"></i>
+                            {{ $post->created_at->diffForHumans() }}
+                        </p>
+                    </div>
+                </a>
             @endforeach
         </marquee>
     </div>

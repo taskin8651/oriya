@@ -242,7 +242,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 <a href="#" class="hover:text-primary"><i class="fa-brands fa-facebook-f"></i></a>
                 <a href="#" class="hover:text-primary"><i class="fa-brands fa-twitter"></i></a>
                 <a href="#" class="hover:text-primary"><i class="fa-brands fa-instagram"></i></a>
-                <a href="#" class="hover:text-primary"><i class="fa-brands fa-youtube"></i></a>
+                <a href="https://youtube.com/@biplabiparikramanews?si=P7nNPAwLt1ZtKPfu" class="hover:text-primary"><i class="fa-brands fa-youtube"></i></a>
                 <a href="#" class="hover:text-primary"><i class="fa-brands fa-whatsapp"></i></a>
             </div>
 
@@ -271,6 +271,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
             <!-- Desktop Category Menu -->
             <ul class="hidden md:flex items-center text-sm space-x-6 py-3 text-gray-200">
+                <li>
+                    <a href="/" class="hover:text-primary font-medium">
+                        Home
+                    </a>
+                </li>
                 @foreach($categories as $category)
                     <li>
                         <a href="{{ route('category.posts', $category->slug) }}"
@@ -412,7 +417,7 @@ document.addEventListener("DOMContentLoaded", function() {
     <div class="flex space-x-4 mt-4">
         <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
         <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
-        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-youtube"></i></a>
+        <a href="https://youtube.com/@biplabiparikramanews?si=P7nNPAwLt1ZtKPfu" class="text-gray-400 hover:text-white"><i class="fab fa-youtube"></i></a>
         <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
     </div>
 </div>

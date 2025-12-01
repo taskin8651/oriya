@@ -12,39 +12,38 @@
     <!-- =================== TOP 4 NEWS =================== -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
 
-      @foreach($posts->take(4) as $post)
-<div class="relative border rounded-xl overflow-hidden shadow-sm hover:shadow-md transition">
+    @foreach($posts->take(4) as $post)
+    <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition overflow-hidden">
 
-    <!-- Image -->
-    <a href="{{ route('post.details', $post->slug) }}">
-        <img src="{{ $post->image ? $post->image->url : 'https://via.placeholder.com/600x350' }}"
-             class="w-full h-56 object-cover" />
-    </a>
-
-    <!-- Bottom Content Overlay -->
-    <div class="absolute bottom-0 left-0 w-full  p-4">
-
+        <!-- Image -->
         <a href="{{ route('post.details', $post->slug) }}">
-            <h2 class="text-lg font-bold text-gray-800 hover:text-blue-300">
-                {{ $post->title }}
-            </h2>
+            <img src="{{ $post->image ? $post->image->url : 'https://via.placeholder.com/600x350' }}"
+                 class="w-full h-56 object-cover" />
         </a>
 
-        <p class="text-sm mt-1 text-gray-800">
-            {{ Str::limit($post->short_description, 120) }}
-        </p>
+        <!-- Card Body -->
+        <div class="p-4">
 
-        <span class="text-xs mt-2 text-gray-800">
-            {{ $post->created_at->format('M d, Y') }}
-        </span>
+            <a href="{{ route('post.details', $post->slug) }}">
+                <h2 class="text-xl font-semibold text-gray-900 hover:text-blue-600">
+                    {{ $post->title }}
+                </h2>
+            </a>
 
+            <p class="text-sm text-gray-600 mt-2">
+                {{ Str::limit($post->short_description, 120) }}
+            </p>
+
+            <span class="text-xs text-gray-500 mt-3 block">
+                {{ $post->created_at->format('M d, Y') }}
+            </span>
+
+        </div>
     </div>
+    @endforeach
 
 </div>
-@endforeach
 
-
-    </div>
 
 
    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
