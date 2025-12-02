@@ -36,8 +36,8 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: "#e11d48",
-                        secondary: "#e11d48",
+                        primary: "#f9053aff",
+                        secondary: "#fd0505ff",
                         dark: "#111827"
                     },
                     fontFamily: {
@@ -157,42 +157,43 @@ function liveSearch(query) {
 }
 
 // Translation
-document.addEventListener("DOMContentLoaded", function() {
-  const skipTranslation = document.querySelector(".no-translate");
-  const elementsToTranslate = document.querySelectorAll("li, p, span, a, h1, h2, h3, h4, h5, h6, div, b, strong, button");
-  elementsToTranslate.forEach(el => { if(skipTranslation?.contains(el)) return; if(el.innerText.trim()!=="") el.dataset.translate="true"; });
+// document.addEventListener("DOMContentLoaded", function() {
+//   const skipTranslation = document.querySelector(".no-translate");
+//   const elementsToTranslate = document.querySelectorAll("li, p, span, a, h1, h2, h3, h4, h5, h6, div, b, strong, button");
+//   elementsToTranslate.forEach(el => { if(skipTranslation?.contains(el)) return; if(el.innerText.trim()!=="") el.dataset.translate="true"; });
 
-  const elements = document.querySelectorAll("[data-translate='true']");
-  const API_KEY = "AIzaSyAf4GFPHe6nTBL19AC-3cRyFwv42R8CwsQ";
+//   const elements = document.querySelectorAll("[data-translate='true']");
+//   const API_KEY = "AIzaSyAf4GFPHe6nTBL19AC-3cRyFwv42R8CwsQ";
 
-  elements.forEach(el => { if(!el.dataset.originalTextNodes){ const nodes=[]; el.childNodes.forEach(node=>{ if(node.nodeType===Node.TEXT_NODE && node.textContent.trim()!=="") nodes.push(node.textContent.trim()); }); el.dataset.originalTextNodes=JSON.stringify(nodes); } });
+//   elements.forEach(el => { if(!el.dataset.originalTextNodes){ const nodes=[]; el.childNodes.forEach(node=>{ if(node.nodeType===Node.TEXT_NODE && node.textContent.trim()!=="") nodes.push(node.textContent.trim()); }); el.dataset.originalTextNodes=JSON.stringify(nodes); } });
 
-  const translateNow = async targetLang=>{
-    const allTexts=[];
-    elements.forEach(el=>{ allTexts.push(...JSON.parse(el.dataset.originalTextNodes)) });
+//   const translateNow = async targetLang=>{
+//     const allTexts=[];
+//     elements.forEach(el=>{ allTexts.push(...JSON.parse(el.dataset.originalTextNodes)) });
 
-    try{
-      const res = await fetch(`https://translation.googleapis.com/language/translate/v2?key=${API_KEY}`, {
-        method:"POST", headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({q:allTexts,target:targetLang})
-      });
-      const data = await res.json();
-      const translations = data.data?.translations?.map(t=>t.translatedText)||[];
-      let counter=0;
-      elements.forEach(el=>{
-        const nodes=JSON.parse(el.dataset.originalTextNodes);
-        el.childNodes.forEach(node=>{
-          if(node.nodeType===Node.TEXT_NODE && node.textContent.trim()!==""){ node.textContent=" "+(translations[counter]||nodes[counter]); counter++; }
-        });
-      });
-    } catch(e){ console.error("Translation failed:", e); }
-  }
+//     try{
+//       const res = await fetch(`https://translation.googleapis.com/language/translate/v2?key=${API_KEY}`, {
+//         method:"POST", headers:{"Content-Type":"application/json"},
+//         body:JSON.stringify({q:allTexts,target:targetLang})
+//       });
+//       const data = await res.json();
+//       const translations = data.data?.translations?.map(t=>t.translatedText)||[];
+//       let counter=0;
+//       elements.forEach(el=>{
+//         const nodes=JSON.parse(el.dataset.originalTextNodes);
+//         el.childNodes.forEach(node=>{
+//           if(node.nodeType===Node.TEXT_NODE && node.textContent.trim()!==""){ node.textContent=" "+(translations[counter]||nodes[counter]); counter++; }
+//         });
+//       });
+//     } catch(e){ console.error("Translation failed:", e); }
+//   }
 
-  translateNow("or");
+//   translateNow("or");
 
-  document.querySelectorAll("#langList li").forEach(item=>{
-    item.addEventListener("click",function(){ const lang=this.getAttribute("data-lang"); translateNow(lang); });
-  });
+//   document.querySelectorAll("#langList li").forEach(item=>{
+//     item.addEventListener("click",function(){ const lang=this.getAttribute("data-lang"); translateNow(lang); });
+//   });
+// });
 
 });
 </script>
@@ -239,11 +240,21 @@ document.addEventListener("DOMContentLoaded", function() {
 
             <!-- Social Media -->
             <div class="flex items-center space-x-3 text-xl text-gray-700">
-                <a href="#" class="hover:text-primary"><i class="fa-brands fa-facebook-f"></i></a>
-                <a href="#" class="hover:text-primary"><i class="fa-brands fa-twitter"></i></a>
-                <a href="#" class="hover:text-primary"><i class="fa-brands fa-instagram"></i></a>
-                <a href="https://youtube.com/@biplabiparikramanews?si=P7nNPAwLt1ZtKPfu" class="hover:text-primary"><i class="fa-brands fa-youtube"></i></a>
-                <a href="#" class="hover:text-primary"><i class="fa-brands fa-whatsapp"></i></a>
+               <a href="#" class="text-gray-400 hover:text-white">
+    <img src="/images/facebook.png" alt="Facebook" class="w-8 h-8">
+</a>
+
+<a href="#" class="text-gray-400 hover:text-white">
+    <img src="/images/x.png" alt="Twitter" class="w-8 h-8">
+</a>
+
+<a href="https://youtube.com/@biplabiparikramanews?si=P7nNPAwLt1ZtKPfu" class="text-gray-400 hover:text-white">
+    <img src="/images/yt.png" alt="YouTube" class="w-8 h-8">
+</a>
+
+<a href="#" class="text-gray-400 hover:text-white">
+    <img src="/images/instagram.png" alt="Instagram" class="w-8 h-8">
+</a>
             </div>
 
         </div>
@@ -272,14 +283,14 @@ document.addEventListener("DOMContentLoaded", function() {
             <!-- Desktop Category Menu -->
             <ul class="hidden md:flex items-center text-sm space-x-6 py-3 text-gray-200">
                 <li>
-                    <a href="/" class="hover:text-primary font-medium">
+                    <a href="/" class="hover:text-primary font-bold text-lg">
                         Home
                     </a>
                 </li>
                 @foreach($categories as $category)
                     <li>
                         <a href="{{ route('category.posts', $category->slug) }}"
-                           class="hover:text-primary font-medium">
+                           class="hover:text-primary font-bold text-lg">
                             {{ $category->name }}
                         </a>
                     </li>
@@ -415,10 +426,22 @@ document.addEventListener("DOMContentLoaded", function() {
     <p class="text-gray-400 text-sm">{{ $footerlogo->description ?? '--' }}</p>
     
     <div class="flex space-x-4 mt-4">
-        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
-        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
-        <a href="https://youtube.com/@biplabiparikramanews?si=P7nNPAwLt1ZtKPfu" class="text-gray-400 hover:text-white"><i class="fab fa-youtube"></i></a>
-        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="text-gray-400 hover:text-white">
+    <img src="/images/facebook.png" alt="Facebook" class="w-8 h-8">
+</a>
+
+<a href="#" class="text-gray-400 hover:text-white">
+    <img src="/images/x.png" alt="Twitter" class="w-8 h-8">
+</a>
+
+<a href="https://youtube.com/@biplabiparikramanews?si=P7nNPAwLt1ZtKPfu" class="text-gray-400 hover:text-white">
+    <img src="/images/yt.png" alt="YouTube" class="w-8 h-8">
+</a>
+
+<a href="#" class="text-gray-400 hover:text-white">
+    <img src="/images/instagram.png" alt="Instagram" class="w-8 h-8">
+</a>
+
     </div>
 </div>
 
@@ -484,7 +507,11 @@ document.addEventListener("DOMContentLoaded", function() {
         </div>
 
         <div class="border-t border-gray-700 mt-6 text-center py-4 text-gray-400 text-sm">
-            © 2024 पत्रेमया न्यूज़7. सर्वाधिकार सुरक्षित।
+           © 2024 Biplabi Parikrama. All rights reserved. 
+<a href="https://sanketkumarofficial.com/" class="text-primary hover:underline">
+    sanketkumarofficial.com
+</a>
+
         </div>
     </footer>
 

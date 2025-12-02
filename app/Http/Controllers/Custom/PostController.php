@@ -83,7 +83,7 @@ class PostController extends Controller
                 ->firstOrFail();
 
     // Increase view count
-    $post->increment('view');
+    // $post->increment('view');
 
     // Related posts
     $related = Post::where('category_id', $post->category_id)

@@ -208,10 +208,12 @@ function carousel(slides) {
                 </span>
 
                 <h3 class="text-lg font-bold mt-2">
-                   <a href="{{ route('post.details', $post->slug) }}">
+    <a href="{{ route('post.details', $post->slug) }}"
+       class="transition-colors duration-300 hover:text-primary">
         {{ $post->title }}
     </a>
-                </h3>
+</h3>
+
 
                 <p class="text-gray-600 text-sm mt-2">
                    {{ \Illuminate\Support\Str::words($post->short_description, 20, '...') }}

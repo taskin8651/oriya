@@ -27,7 +27,7 @@
                     <span class="mr-4"><i class="far fa-user mr-1"></i> By {{ $post->author->name ?? 'Staff Reporter' }}</span>
                     <span class="mr-4"><i class="far fa-calendar mr-1"></i> {{ $post->created_at->format('M d, Y') }}</span>
                     <span class="mr-4"><i class="far fa-clock mr-1"></i> {{ ceil(str_word_count(strip_tags($post->content)) / 200) }} min read</span>
-                    <span><i class="far fa-eye mr-1"></i> {{ $post->view ?? 0 }} views</span>
+                    <!-- <span><i class="far fa-eye mr-1"></i> {{ $post->view ?? 0 }} views</span> -->
                 </div>
 
                 <!-- Tags -->
@@ -58,42 +58,96 @@
                 {!! $post->content !!}
             </div>
 
-            <!-- Share Section -->
-            <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
-                <h3 class="font-bold text-gray-900 mb-4">Share this article</h3>
+         @php
+    // View column me YouTube embed link aayega (optional)
+    $youtubeUrl = $post->view ?? null; 
+@endphp
+<div class="bg-white rounded-xl shadow-sm p-4 mb-6">
 
-                <div class="flex space-x-4">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-                    <!-- Facebook -->
-                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(request()->url()) }}"
-                       target="_blank"
-                       class="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center">
-                        <i class="fab fa-facebook-f mr-2"></i> Share
-                    </a>
+        <!-- LEFT SIDE — YouTube -->
+       <div class="md:col-span-2">
+          @if($youtubeUrl)
+    <div class="w-full aspect-video mb-4">
+        <iframe 
+            src="{{ $youtubeUrl }}"
+            class="w-full h-full rounded-lg"
+            frameborder="0"
+            allowfullscreen>
+        </iframe>
+    </div>
+@else
+    <div class="bg-gray-100 text-gray-600 p-4 rounded-lg text-center mb-4">
+        No video available for this news.
+    </div>
+@endif
 
-                    <!-- Twitter -->
-                    <a href="https://twitter.com/intent/tweet?url={{ urlencode(request()->url()) }}&text={{ urlencode($post->title) }}"
-                       target="_blank"
-                       class="bg-sky-500 text-white px-4 py-2 rounded-lg flex items-center">
-                        <i class="fab fa-twitter mr-2"></i> Tweet
-                    </a>
 
-                    <!-- LinkedIn -->
-                    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(request()->url()) }}"
-                       target="_blank"
-                       class="bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center">
-                        <i class="fab fa-linkedin-in mr-2"></i> Share
-                    </a>
+           
+        </div>
 
-                    <!-- WhatsApp -->
-                    <a href="https://api.whatsapp.com/send?text={{ urlencode($post->title.' '.request()->url()) }}"
-                       target="_blank"
-                       class="bg-green-500 text-white px-4 py-2 rounded-lg flex items-center">
-                        <i class="fab fa-whatsapp mr-2"></i> Share
-                    </a>
+        <!-- RIGHT SIDE — Share Section -->
+        <div class="bg-white rounded-xl shadow-sm p-4">
 
-                </div>
-            </div>
+            <h3 class="font-bold text-gray-900 mb-4">Share this article</h3>
+
+            <!-- MOBILE = horizontal ; DESKTOP = vertical -->
+           <div class="flex md:flex-col flex-row md:space-y-3 space-x-3 md:space-x-0">
+
+    <!-- Facebook -->
+    <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(request()->url()) }}"
+       target="_blank"
+       class="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center justify-center">
+        <i class="fab fa-facebook-f"></i>
+        <span class="hidden md:inline ml-2">Share</span>
+    </a>
+
+    <!-- Twitter -->
+    <a href="https://twitter.com/intent/tweet?url={{ urlencode(request()->url()) }}&text={{ urlencode($post->title) }}"
+       target="_blank"
+       class="bg-sky-500 text-white px-4 py-2 rounded-lg flex items-center justify-center">
+        <i class="fab fa-twitter"></i>
+        <span class="hidden md:inline ml-2">Tweet</span>
+    </a>
+
+    <!-- LinkedIn -->
+    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(request()->url()) }}"
+       target="_blank"
+       class="bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center justify-center">
+        <i class="fab fa-linkedin-in"></i>
+        <span class="hidden md:inline ml-2">Share</span>
+    </a>
+
+    <!-- WhatsApp -->
+    <a href="https://api.whatsapp.com/send?text={{ urlencode($post->title.' '.request()->url()) }}"
+       target="_blank"
+       class="bg-green-500 text-white px-4 py-2 rounded-lg flex items-center justify-center">
+        <i class="fab fa-whatsapp"></i>
+        <span class="hidden md:inline ml-2">Share</span>
+    </a>
+    
+
+   <a href="{{ $youtubeUrl }}" target="_blank"
+   class="inline-flex items-center bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition">
+
+    <!-- Desktop Text -->
+    <span class="hidden md:inline">Watch on YouTube</span>
+
+    <!-- Mobile Icon -->
+    <i class="fab fa-youtube text-xl md:hidden"></i>
+
+</a>
+
+
+</div>
+
+        </div>
+
+    </div>
+
+</div>
+
 
         </div>
 
