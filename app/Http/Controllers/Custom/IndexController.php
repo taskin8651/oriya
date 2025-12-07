@@ -14,7 +14,7 @@ class IndexController extends Controller
     public function index()
     {
         // Odisha category find
-        $odishaCategory = Category::where('slug', 'local-news')->all();
+        $odishaCategory = Category::where('slug', 'local-news')->get();
 
         // If category mil jaye to posts fetch karo
         $odishaPosts = [];
