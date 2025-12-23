@@ -339,43 +339,53 @@ function carousel(slides) {
 <section class="container mx-auto px-4 py-6">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-        @foreach($categories as $category)
-            @if($category->posts->count() > 0)
+       @foreach($categories as $category)
 
-                <div class="bg-white border rounded-xl p-4 shadow-sm">
-                    <h2 class="text-xl font-semibold border-b-2 border-red-600 pb-2 mb-4">
-                        {{ $category->name }}
-                    </h2>
+    <div class="bg-white border rounded-xl p-4 shadow-sm">
 
-                    <div class="space-y-4">
-                        @foreach($category->posts as $post)
-                            <div class="flex gap-3">
-                                <img src="{{ $post->image->url ?? 'https://via.placeholder.com/120x80?text=Img' }}"
-                                     class="w-28 h-20 object-cover rounded">
+        <h2 class="text-xl font-semibold border-b-2 border-red-600 pb-2 mb-4">
+            {{ $category->name }}
+        </h2>
 
-                                <div>
-                                   <h3 class="font-semibold leading-tight hover:text-red-600 cursor-pointer">
-    <a href="{{ route('post.details', $post->slug) }}">
-        {{ $post->title }}
-    </a>
-</h3>
+        {{-- Latest 5 Posts --}}
+        @if($category->posts->count() > 0)
+            <div class="space-y-4">
+                @foreach($category->posts as $post)
+                    <div class="flex gap-3">
+                        <img src="{{ $post->image->url ?? 'https://via.placeholder.com/120x80?text=Img' }}"
+                             class="w-28 h-20 object-cover rounded">
 
-                                    <p class="text-sm text-gray-500">
-                                        {{ $post->created_at->format('F d, Y') }}
-                                    </p>
-                                </div>
-                            </div>
-                        @endforeach
+                        <div>
+                            <h3 class="font-semibold leading-tight hover:text-red-600 cursor-pointer">
+                                <a href="{{ route('post.details', $post->slug) }}">
+                                    {{ $post->title }}
+                                </a>
+                            </h3>
+
+                            <p class="text-sm text-gray-500">
+                                {{ $post->created_at->format('F d, Y') }}
+                            </p>
+                        </div>
                     </div>
+                @endforeach
+            </div>
+        @else
+            <p class="text-gray-400 text-sm">No posts available</p>
+        @endif
 
-                    <a href="{{ url('category/'.$category->slug) }}"
-                       class="text-red-600 font-semibold mt-3 inline-block hover:underline cursor-pointer">
-                        More {{ $category->name }} News →
-                    </a>
-                </div>
+        {{-- Show More link only if total posts > 5 --}}
+@if($category->total_posts_count > 5)
+    <a href="{{ route('category.posts', $category->slug) }}"
+       class="text-red-600 font-semibold mt-3 inline-block hover:underline">
+        More News →
+    </a>
+@endif
 
-            @endif
-        @endforeach
+
+    </div>
+
+@endforeach
+
 
     </div>
 </section>

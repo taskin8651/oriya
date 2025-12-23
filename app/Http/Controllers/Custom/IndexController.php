@@ -47,13 +47,19 @@ class IndexController extends Controller
         ->get();
 
 // सभी categories लाओ
-    $categories = Category::with(['posts' => function ($q) {
+   $categories = Category::with([
+    'posts' => function ($q) {
         $q->where('status', 'published')
           ->latest()
-          ->take(3);   // हर category में 3 पोस्ट दिखाओ
-    }])
-    ->orderBy('name')
-    ->get();
+          ->take(8);   // sirf latest 5 posts
+    }
+])
+->withCount(['posts as total_posts_count' => function ($q) {
+    $q->where('status', 'published'); // total published posts count
+}])
+->orderBy('name')
+->get();
+
       $crousels = Crousel::all();
         
         return view('custom.index', compact('odishaPosts', 'sidebarAd', 'latestPosts', 'latest12', 'youtubeVideos','categories','crousels'));

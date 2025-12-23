@@ -11,7 +11,7 @@
 
     $categories = Category::all();
     $breakingNews = BreakingNews::where('status','active')->latest()->get();
-    $Banner = Ad::where('type', 'Banner')->where('status', 'active')->latest()->first();
+    $Banners = Ad::where('type', 'Banner')->where('status', 'active')->latest()->get();
      // Header logo
         $headerlogo = HeaderLogo::first();
     // Footer logo
@@ -74,7 +74,7 @@
 <body class="bg-gray-50">
 
   <!-- TOP BAR -->
-<div class="bg-white border-b">
+<div class="bg-white border-b lg:block hidden">
     <div class="container mx-auto px-4 py-2 flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
 
         <!-- Left: Time -->
@@ -91,17 +91,17 @@
             </button>
 
             <!-- Language Menu -->
-            <ul id="langList" class="lang-menu flex gap-2 md:gap-4 list-none p-0 m-0">
+            <!-- <ul id="langList" class="lang-menu flex gap-2 md:gap-4 list-none p-0 m-0">
                 <li data-lang="or" class="px-3 py-1 bg-gray-200 rounded-md cursor-pointer hover:bg-gray-300">ଓଡିଆ</li>
                 <li data-lang="en" class="px-3 py-1 bg-gray-200 rounded-md cursor-pointer hover:bg-gray-300">English</li>
                 <li data-lang="hi" class="px-3 py-1 bg-gray-200 rounded-md cursor-pointer hover:bg-gray-300">हिन्दी</li>
-            </ul>
+            </ul> -->
         </div>
     </div>
 </div>
 
 <!-- SEARCH POPUP OVERLAY -->
-<div id="searchPopup" class="fixed inset-0 bg-black bg-opacity-60 hidden flex items-center justify-center z-50 p-4">
+<div id="searchPopup" class="fixed inset-0 bg-black bg-opacity-60 hidden flex items-center justify-center z-50 p-4 ">
     <div class="bg-white rounded-xl w-full max-w-lg p-6 relative">
 
         <!-- Close Button -->
@@ -195,7 +195,7 @@ function liveSearch(query) {
 //   });
 // });
 
-});
+// });
 </script>
 
   <!-- HEADER LOGO + LIVE TV -->
@@ -210,18 +210,43 @@ function liveSearch(query) {
                 class="h-12 md:h-16 object-contain">
         </div>
 
-       <!-- Center: Ad -->
-@isset($Banner->banner)
+       @isset($Banners)
 <div class="flex-1 flex justify-center w-full">
-    <div class="w-full max-w-[328px] h-[42px] bg-gray-200 rounded-lg flex items-center justify-center text-gray-600 border border-dashed border-gray-400 overflow-hidden">
-        <a href="{{ $Banner->link ?? '#' }}" class="block w-full h-full">
-            <img src="{{ $Banner->banner->getUrl() }}"
-                class="w-full h-full object-cover rounded-lg"
-                alt="Advertisement">
-        </a>
+    <div class="relative w-full max-w-[708px] h-[60px] sm:h-[48px] md:h-[56px] lg:h-[80px] overflow-hidden rounded-lg border border-dashed border-gray-400 bg-gray-200">
+
+        <!-- Slides -->
+        <div id="adCarousel" class="flex transition-transform duration-500 ease-in-out">
+            @foreach($Banners as $banner)
+                <a href="{{ $banner->link ?? '#' }}" class="min-w-full h-[80px] block">
+                    <img
+                        src="{{ $banner->banner->getUrl() }}"
+                        alt="Advertisement"
+                        class="w-full h-full object-cover rounded-lg">
+                </a>
+            @endforeach
+        </div>
+
+        <!-- Dots -->
+        <div class="absolute bottom-1 left-1/2 -translate-x-1/2 flex gap-1">
+            @foreach($Banners as $key => $banner)
+                <span class="w-1.5 h-1.5 rounded-full bg-white/70"></span>
+            @endforeach
+        </div>
+
     </div>
 </div>
 @endisset
+<script>
+    const carousel = document.getElementById('adCarousel');
+    const slides = carousel.children;
+    let index = 0;
+
+    setInterval(() => {
+        index = (index + 1) % slides.length;
+        carousel.style.transform = `translateX(-${index * 100}%)`;
+    }, 8000); // 3 sec
+</script>
+
 
 
         <!-- Right: Buttons + Social -->
@@ -238,24 +263,47 @@ function liveSearch(query) {
                 </a>
             </div>
 
-            <!-- Social Media -->
-            <div class="flex items-center space-x-3 text-xl text-gray-700">
-               <a href="#" class="text-gray-400 hover:text-white">
-    <img src="/images/facebook.png" alt="Facebook" class="w-8 h-8">
-</a>
+           <!-- Social Media -->
+<div class="flex items-center space-x-4 mt-4">
 
-<a href="#" class="text-gray-400 hover:text-white">
-    <img src="/images/x.png" alt="Twitter" class="w-8 h-8">
-</a>
+    <!-- Facebook -->
+    <a href="#"
+       aria-label="Facebook"
+       class="w-12 h-12 flex items-center justify-center rounded-md bg-[#1877F2] hover:opacity-80 transition">
+        <i class="fab fa-facebook-f text-xl text-white"></i>
+    </a>
 
-<a href="https://youtube.com/@biplabiparikramanews?si=P7nNPAwLt1ZtKPfu" class="text-gray-400 hover:text-white">
-    <img src="/images/yt.png" alt="YouTube" class="w-8 h-8">
-</a>
+    <!-- X (Twitter) -->
+    <a href="#"
+       aria-label="X"
+       class="w-12 h-12 flex items-center justify-center rounded-md bg-black hover:opacity-80 transition">
+        <i class="fab fa-twitter text-xl text-white"></i>
+    </a>
 
-<a href="#" class="text-gray-400 hover:text-white">
-    <img src="/images/instagram.png" alt="Instagram" class="w-8 h-8">
-</a>
-            </div>
+    <!-- YouTube -->
+    <a href="https://youtube.com/@biplabiparikramanews?si=P7nNPAwLt1ZtKPfu"
+       aria-label="YouTube"
+       class="w-12 h-12 flex items-center justify-center rounded-md bg-[#FF0000] hover:opacity-80 transition">
+        <i class="fab fa-youtube text-xl text-white"></i>
+    </a>
+
+    <!-- Instagram -->
+    <a href="#"
+       aria-label="Instagram"
+       class="w-12 h-12 flex items-center justify-center rounded-md bg-gradient-to-tr from-[#F58529] via-[#DD2A7B] to-[#8134AF] hover:opacity-80 transition">
+        <i class="fab fa-instagram text-xl text-white"></i>
+    </a>
+
+    <!-- WhatsApp -->
+    <a href="https://api.whatsapp.com/send?text={{ urlencode(request()->url()) }}"
+       aria-label="WhatsApp"
+       class="w-12 h-12 flex items-center justify-center rounded-md bg-green-500 hover:opacity-80 transition">
+        <i class="fab fa-whatsapp text-xl text-white"></i>
+    </a>
+
+</div>
+
+
 
         </div>
 
@@ -264,137 +312,107 @@ function liveSearch(query) {
 
 <header class="bg-dark text-white shadow">
 
-    <!-- TOP MAIN NAV -->
-    <div class="container mx-auto px-4 flex items-center justify-between ">
+    <!-- TOP BAR -->
+    <div class="container mx-auto px-4 flex items-center justify-between h-14">
 
-       
-
-
-        <!-- Mobile open button -->
-        <button id="menuToggle" class="md:hidden text-white text-2xl">
+        <!-- Mobile: Menu Button (LEFT) -->
+        <button id="menuToggle"
+                class="md:hidden text-white text-3xl p-2">
             <i class="fa-solid fa-bars"></i>
         </button>
-    </div>
 
-    <!-- CATEGORY NAV -->
-    <nav class="bg-dark relative border-t border-gray-700">
-        <div class="container mx-auto px-4">
-
-            <!-- Desktop Category Menu -->
-            <ul class="hidden md:flex items-center text-sm space-x-6 py-3 text-gray-200">
-                <li>
-                    <a href="/" class="hover:text-primary font-bold text-lg">
-                        Home
-                    </a>
-                </li>
-                @foreach($categories as $category)
-                    <li>
-                        <a href="{{ route('category.posts', $category->slug) }}"
-                           class="hover:text-primary font-bold text-lg">
-                            {{ $category->name }}
-                        </a>
-                    </li>
-                @endforeach
-            </ul>
-
-        </div>
-    </nav>
-</header>
-
-<!-- ───────── MOBILE DRAWER ───────── -->
-<div id="categoryDrawer"
-     class="fixed top-0 left-0 h-full w-64 bg-dark text-white transform -translate-x-full
-            transition-all duration-300 z-50 md:hidden shadow-lg">
-
-    <!-- Drawer Header -->
-    <div class="p-4 text-lg font-semibold border-b border-gray-700 flex justify-between items-center">
-
-        <!-- Logo -->
-        <a href="/" class="flex items-center">
-            <img src="{{ $headerlogo->upload_image?->getUrl() ?? 'https://via.placeholder.com/150x50' }}"
-                 alt="Logo" class="h-10 object-contain">
-        </a>
-
-        <button id="closeMenu" class="text-xl hover:text-primary">
-            <i class="fa-solid fa-times"></i>
-        </button>
-    </div>
-
-    <!-- Drawer Links -->
-    <ul class="flex flex-col space-y-4 p-4 text-gray-200">
-
-        <!-- Static Menu -->
-        <li><a href="/" class="hover:text-primary font-medium block">Home</a></li>
-        <li><a href="/epaper" class="hover:text-primary font-medium block">E-Paper</a></li>
-        <li><a href="/gallery" class="hover:text-primary font-medium block">Gallery</a></li>
-
-        <hr class="border-gray-700">
-@php
-    $categoryCount = $categories->count(); // Total categories
-@endphp
-
-<ul class="flex flex-col space-y-4 p-4 text-gray-200">
-
-    <!-- Single clickable "Category" -->
-    <li class="flex flex-col">
-        <span id="toggleCategory" class="w-full flex justify-between items-center font-medium cursor-pointer">
-            Category ({{ $categoryCount }})
-            <i class="fa-solid fa-chevron-down transition-transform" id="categoryIcon"></i>
-        </span>
-
-        <!-- Hidden Category List -->
-        <ul id="categoryList" class="pl-4 mt-2 hidden space-y-2">
+        <!-- Desktop: Category Menu (LEFT) -->
+        <ul class="hidden md:flex items-center space-x-6 text-gray-200">
+            <li>
+                <a href="/" class="hover:text-primary font-bold text-lg">
+                    Home
+                </a>
+            </li>
             @foreach($categories as $category)
                 <li>
-                    <a href="{{ route('category.posts', $category->slug) }}" 
-                       class="block hover:text-primary text-sm">
-                        {{ $category->name }} ({{ $category->posts->count() }})
+                    <a href="{{ route('category.posts', $category->slug) }}"
+                       class="hover:text-primary font-bold text-lg">
+                        {{ $category->name }}
                     </a>
                 </li>
             @endforeach
         </ul>
-    </li>
 
-</ul>
+        <!-- Event Button / Icon (RIGHT – both mobile & desktop) -->
+        <a href="/events"
+           class="flex items-center gap-2 px-3 py-2
+                  bg-primary text-white text-sm font-semibold rounded
+                  hover:bg-primary/90 transition">
+            <i class="fa-solid fa-calendar-days text-xl md:text-base"></i>
+            <span class="hidden md:inline">Events</span>
+        </a>
+
+    </div>
+
+</header>
 
 
+<!-- ───────── MOBILE DRAWER ───────── -->
+<!-- MOBILE SLIDE DOWN MENU -->
+<div id="mobileMenu"
+     class="md:hidden bg-dark text-white overflow-hidden max-h-0 transition-all duration-300 ease-in-out">
+
+    <div class="px-4  border-t border-gray-700 flex flex-col items-center">
+  <!-- Home Icon -->
+        <a href="/"
+           class="flex items-center justify-center w-10 h-10  hover:bg-primary transition mb-4">
+            <i class="fa-solid fa-house text-lg"></i>
+        </a>
+
+        <!-- Divider -->
+        <span class="w-12 h-[1px] bg-gray-600"></span>
+        <!-- Category List (Always Visible) -->
+        <div class="space-y-3 text-center">
+            @foreach($categories as $category)
+                <a href="{{ route('category.posts', $category->slug) }}"
+                   class="block text-base font-medium hover:text-primary">
+                    {{ $category->name }}
+                </a>
+            @endforeach
+        </div>
+
+    </div>
 </div>
+
 <script>
     const menuToggle = document.getElementById("menuToggle");
-    const categoryDrawer = document.getElementById("categoryDrawer");
-    const closeMenu = document.getElementById("closeMenu");
+    const mobileMenu = document.getElementById("mobileMenu");
 
-    // Open Drawer
     menuToggle.addEventListener("click", () => {
-        categoryDrawer.classList.remove("-translate-x-full");
+        if (mobileMenu.classList.contains("max-h-0")) {
+            mobileMenu.classList.remove("max-h-0");
+            mobileMenu.classList.add("max-h-[1000px]");
+        } else {
+            mobileMenu.classList.add("max-h-0");
+            mobileMenu.classList.remove("max-h-[1000px]");
+        }
     });
 
-    // Close Drawer
-    closeMenu.addEventListener("click", () => {
-        categoryDrawer.classList.add("-translate-x-full");
-    });
-
-    // Toggle Category List (single span)
+    // Category Toggle
     const toggleCategory = document.getElementById("toggleCategory");
     const categoryList = document.getElementById("categoryList");
     const categoryIcon = document.getElementById("categoryIcon");
 
-    if (toggleCategory) {
-        toggleCategory.addEventListener("click", () => {
-            if (categoryList) categoryList.classList.toggle("hidden");
-            if (categoryIcon) categoryIcon.classList.toggle("rotate-180");
-        });
-    }
+    toggleCategory.addEventListener("click", () => {
+        categoryList.classList.toggle("hidden");
+        categoryIcon.classList.toggle("rotate-180");
+    });
 </script>
+
 
 
 
     <!-- BREAKING NEWS TICKER -->
     <div class="bg-primary text-white py-2">
-        <div class="container mx-auto px-4 flex items-center">
-            <span class="mr-3 font-bold whitespace-nowrap bg-red-800 px-2 py-1 rounded">Breaking News</span>
+        <div class="container mx-auto px-1 flex items-center">
+            <span class="mr-3 font-bold whitespace-nowrap bg-red-800 px-2 py-1 rounded"> Breaking</span>
             <div class="marquee-container w-full">
-                <div class="marquee-content text-sm text-white">
+                <div class="marquee-content text-lg text-white">
                     @foreach($breakingNews as $news)
                     <p class="text-white-800 font-bold inline-block">
                         {{ $news->title }} &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;

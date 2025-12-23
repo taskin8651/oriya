@@ -36,6 +36,50 @@
                         <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">#{{ $tag->name }}</span>
                     @endforeach
                 </div>
+                <!-- Tags -->
+<div class="flex flex-wrap space-x-2 mb-4">
+    @foreach($post->tags as $tag)
+        <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">#{{ $tag->name }}</span>
+    @endforeach
+</div>
+
+<!-- Social Share Buttons -->
+<div class="flex flex-wrap gap-2">
+
+    <!-- Facebook -->
+    <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(request()->url()) }}"
+       target="_blank"
+       class="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center justify-center hover:bg-blue-700 transition">
+        <i class="fab fa-facebook-f"></i>
+        <span class="hidden md:inline ml-2">Share</span>
+    </a>
+
+    <!-- Twitter -->
+    <a href="https://twitter.com/intent/tweet?url={{ urlencode(request()->url()) }}&text={{ urlencode($post->title) }}"
+       target="_blank"
+       class="bg-sky-500 text-white px-4 py-2 rounded-lg flex items-center justify-center hover:bg-sky-600 transition">
+        <i class="fab fa-twitter"></i>
+        <span class="hidden md:inline ml-2">Tweet</span>
+    </a>
+
+    <!-- LinkedIn -->
+    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(request()->url()) }}"
+       target="_blank"
+       class="bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center justify-center hover:bg-blue-800 transition">
+        <i class="fab fa-linkedin-in"></i>
+        <span class="hidden md:inline ml-2">Share</span>
+    </a>
+
+    <!-- WhatsApp -->
+    <a href="https://api.whatsapp.com/send?text={{ urlencode($post->title.' '.request()->url()) }}"
+       target="_blank"
+       class="bg-green-500 text-white px-4 py-2 rounded-lg flex items-center justify-center hover:bg-green-600 transition">
+        <i class="fab fa-whatsapp"></i>
+        <span class="hidden md:inline ml-2">Share</span>
+    </a>
+
+</div>
+
             </div>
 
             <!-- Featured Image -->
@@ -170,12 +214,12 @@
 
             <!-- Related Posts -->
             <div class="bg-white rounded-xl shadow-sm p-6 mb-6 mt-3">
-                <h3 class="font-bold text-gray-900 mb-4 border-b pb-2">Related News</h3>
+                <h3 class="font-bold text-gray-900 mb-4 border-b pb-2">View More</h3>
 
                 <div class="space-y-4">
                     @foreach($related as $item)
                     <a href="{{ route('post.details', $item->slug) }}">
-                        <div class="flex p-3 rounded-lg border border-gray-100 hover:border-blue-200 cursor-pointer transition">
+                        <div class="flex p-3 rounded-lg border border-gray-100 hover:border-blue-200 cursor-pointer transition my-2">
                             <div class="flex-shrink-0 w-20 h-16 bg-gray-200 rounded-md overflow-hidden">
                                 <img src="{{ $item->image->thumbnail ?? asset('no-img.png') }}"
                                      class="w-full h-full object-cover">
