@@ -54,7 +54,7 @@
 
         @foreach($leftCategories as $cat)
             <!-- Category Title -->
-            <h3 class="text-lg font-semibold mt-4">{{ $cat->title }}</h3>
+            <h3 class="text-lg font-semibold mt-4">{{ $cat->name }}</h3>
 
             <!-- Posts of this Category -->
             @foreach($leftPosts->where('category_id', $cat->id)->take(5) as $post)
