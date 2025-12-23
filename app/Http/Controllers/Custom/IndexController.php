@@ -63,7 +63,7 @@ $categories = Category::whereHas('posts', function ($q) {
             $q->where('status', 'published');
         }
     ])
-    ->orderBy('name')
+    ->orderBy('name', 'asc')
     ->get();
 
 
