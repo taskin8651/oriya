@@ -55,7 +55,7 @@ $categories = Category::whereHas('posts', function ($q) {
         'posts' => function ($q) {
             $q->where('status', 'published')
               ->latest()
-              ->take(8);   // latest 8 posts
+              ->get();   // latest 8 posts
         }
     ])
     ->withCount([
