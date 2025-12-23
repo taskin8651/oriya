@@ -109,11 +109,13 @@
         <!-- LEFT AREA -->
         <div class=" lg:col-span-6 ">
 
-      @php
+     @php
 $slides = $crousels->map(function($c) {
-    return $c->upload_image 
-        ? $c->upload_image->url 
-        : 'https://dummyimage.com/900x500/4a5568/ffffff&text=No+Image';
+    return [
+        'url' => $c->upload_image ? $c->upload_image->url : 'https://dummyimage.com/900x500/4a5568/ffffff&text=No+Image',
+        'title' => $c->title,
+        'description' => $c->description,
+    ];
 })->toArray();
 @endphp
 
@@ -122,7 +124,14 @@ $slides = $crousels->map(function($c) {
     <!-- Slides -->
     <template x-for="(slide, index) in slides" :key="index">
         <div x-show="active === index" x-cloak class="absolute inset-0 w-full h-full">
-            <img :src="slide" alt="" class="w-full h-full object-cover">
+
+            <img :src="slide.url" alt="" class="w-full h-full object-cover">
+
+            <!-- Caption -->
+            <div class="absolute bottom-0 left-0 right-0 p-4 md:p-6 bg-gradient-to-t from-black/70 to-transparent text-white">
+                <h2 class="text-lg md:text-2xl font-bold" x-text="slide.title"></h2>
+                <p class="text-sm md:text-base mt-1" x-text="slide.description"></p>
+            </div>
         </div>
     </template>
 
@@ -148,12 +157,11 @@ function simpleCarousel(slides) {
         active: 0,
         next() { this.active = (this.active + 1) % this.slides.length },
         prev() { this.active = (this.active - 1 + this.slides.length) % this.slides.length },
-        init() {
-            setInterval(() => this.next(), 5000); // Auto slide every 5 sec
-        }
+        init() { setInterval(() => this.next(), 5000); }
     }
 }
 </script>
+
 
 
 
