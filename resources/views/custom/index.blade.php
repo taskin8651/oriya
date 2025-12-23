@@ -215,10 +215,7 @@ function carousel(slides) {
 </h3>
 
 
-                <p class="text-gray-600 text-sm mt-2">
-                   {{ \Illuminate\Support\Str::words($post->short_description, 20, '...') }}
-
-                </p>
+              
 
                 <p class="text-xs text-gray-500 mt-3">
                     <i class="fa-regular fa-clock mr-1"></i>
