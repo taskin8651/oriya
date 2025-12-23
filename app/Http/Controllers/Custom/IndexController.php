@@ -63,7 +63,7 @@ $categories = Category::whereHas('posts', function ($q) {
             $q->where('status', 'published');
         }
     ])
-    ->latest()
+    ->orderByDesc('total_posts_count') // 🔥 MOST IMPORTANT
     ->get();
 
 
