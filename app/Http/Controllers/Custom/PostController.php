@@ -53,16 +53,27 @@ $leftPosts = Post::with('media')
 
 
 
-    // RIGHT: Previous categories
-    $rightCategories = $allCategories->slice(0, $currentIndex);
+   // RIGHT: Current category se pehle ki 2 categories (jisme post ho)
+$rightCategories = $allCategories
+    ->slice(0, $currentIndex)   // current se pehle wali
+    ->reverse()                 // just previous first
+    ->filter(function ($cat) {
+        return $cat->posts()
+            ->where('status', 'published')
+            ->exists();         // kam se kam 1 post ho
+    })
+    ->take(2)
+    ->reverse();                // original order maintain
+
 
     $rightPosts = Post::with('media')
-        ->whereIn('category_id', $rightCategories->pluck('id'))
-        ->where('status', 'published')
-        ->latest()
-        ->take(20)
-        ->get();
+    ->whereIn('category_id', $rightCategories->pluck('id'))
+    ->where('status', 'published')
+    ->latest()
+    ->get();
 
+
+    
          $sidebarAd = Ad::where('type', 'sidebar')
     ->where('status', 'active')
     ->first();
