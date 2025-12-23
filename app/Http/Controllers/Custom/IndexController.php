@@ -48,14 +48,15 @@ class IndexController extends Controller
 
 // सभी categories लाओ
   // Controller me
-$categories = Category::whereHas('posts', function ($q) {
+$categories = Category::where('slug', '!=', 'local-news') // ❌ local-news hata diya
+    ->whereHas('posts', function ($q) {
         $q->where('status', 'published');
     })
     ->with([
         'posts' => function ($q) {
             $q->where('status', 'published')
               ->latest()
-              ->get();   // latest 8 posts
+              ->take(8);
         }
     ])
     ->withCount([
@@ -63,8 +64,9 @@ $categories = Category::whereHas('posts', function ($q) {
             $q->where('status', 'published');
         }
     ])
-    ->orderByDesc('total_posts_count') // 🔥 MOST IMPORTANT
+    ->orderByDesc('total_posts_count') // jyada posts wali category pehle
     ->get();
+
 
 
       $crousels = Crousel::all();
