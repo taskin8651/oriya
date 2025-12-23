@@ -109,44 +109,20 @@
         <!-- LEFT AREA -->
         <div class=" lg:col-span-6 ">
 
-        @php
+      @php
 $slides = $crousels->map(function($c) {
-    return [
-        'url' => $c->upload_image ? $c->upload_image->url : 'https://dummyimage.com/900x500/4a5568/ffffff&text=No+Image',
-        'title' => $c->title,
-        'description' => $c->description,
-        'label' => 'मुख्य समाचार',
-        'type' => 'image', // future me video bhi add ho sakta hai
-    ];
-})->values()->toArray();
+    return $c->upload_image 
+        ? $c->upload_image->url 
+        : 'https://dummyimage.com/900x500/4a5568/ffffff&text=No+Image';
+})->toArray();
 @endphp
 
-<div x-data="carousel(@js($slides))" x-init="init()" class="relative overflow-hidden rounded-lg shadow-lg max-w-6xl mx-auto h-72 md:h-96">
+<div x-data="simpleCarousel(@js($slides))" x-init="init()" class="relative max-w-6xl mx-auto h-72 md:h-96 overflow-hidden rounded-lg shadow-lg">
+
     <!-- Slides -->
     <template x-for="(slide, index) in slides" :key="index">
-        <div 
-            x-show="active === index" 
-            x-transition:enter="transition ease-out duration-700" 
-            x-transition:enter-start="opacity-0 scale-95" 
-            x-transition:enter-end="opacity-100 scale-100"
-            x-transition:leave="transition ease-in duration-500" 
-            x-transition:leave-start="opacity-100 scale-100" 
-            x-transition:leave-end="opacity-0 scale-95"
-            class="absolute inset-0 w-full h-full"
-        >
-            <template x-if="slide.type==='image'">
-                <img :src="slide.url" :alt="slide.title" class="w-full h-full object-cover">
-            </template>
-            <template x-if="slide.type==='video'">
-                <video :src="slide.url" controls autoplay class="w-full h-full object-cover"></video>
-            </template>
-
-            <!-- Caption -->
-            <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/70 to-transparent">
-                <span class="bg-yellow-500 text-black px-2 py-1 text-xs rounded" x-text="slide.label"></span>
-                <h2 class="text-2xl md:text-3xl font-bold text-white mt-3 leading-tight" x-text="slide.title"></h2>
-                <p class="text-gray-300 mt-2 text-sm" x-text="slide.description"></p>
-            </div>
+        <div x-show="active === index" x-cloak class="absolute inset-0 w-full h-full">
+            <img :src="slide" alt="" class="w-full h-full object-cover">
         </div>
     </template>
 
@@ -157,7 +133,8 @@ $slides = $crousels->map(function($c) {
     <!-- Dots -->
     <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
         <template x-for="(slide, index) in slides" :key="index">
-            <div @click="active = index" class="w-3 h-3 rounded-full cursor-pointer transition"
+            <div @click="active = index" 
+                 class="w-3 h-3 rounded-full cursor-pointer transition"
                  :class="{'bg-yellow-500': active === index, 'bg-white/50': active !== index}"></div>
         </template>
     </div>
@@ -165,30 +142,19 @@ $slides = $crousels->map(function($c) {
 
 <script src="https://unpkg.com/alpinejs@3.13.2/dist/cdn.min.js" defer></script>
 <script>
-function carousel(slides) {
+function simpleCarousel(slides) {
     return {
+        slides,
         active: 0,
-        slides: slides,
-        startX: 0,
-        endX: 0,
-        next() { this.active = (this.active + 1) % this.slides.length; },
-        prev() { this.active = (this.active - 1 + this.slides.length) % this.slides.length; },
+        next() { this.active = (this.active + 1) % this.slides.length },
+        prev() { this.active = (this.active - 1 + this.slides.length) % this.slides.length },
         init() {
-            // Auto slide
-            setInterval(() => this.next(), 5000);
-
-            // Swipe support for mobile
-            const el = this.$el;
-            el.addEventListener('touchstart', (e) => { this.startX = e.touches[0].clientX; });
-            el.addEventListener('touchend', (e) => {
-                this.endX = e.changedTouches[0].clientX;
-                if (this.startX - this.endX > 50) this.next();
-                if (this.endX - this.startX > 50) this.prev();
-            });
+            setInterval(() => this.next(), 5000); // Auto slide every 5 sec
         }
     }
 }
 </script>
+
 
 
             <!-- GRID NEWS -->
