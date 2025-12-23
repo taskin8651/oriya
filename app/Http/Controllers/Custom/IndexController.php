@@ -56,7 +56,7 @@ $categories = Category::where('slug', '!=', 'local-news') // ❌ local-news hata
         'posts' => function ($q) {
             $q->where('status', 'published')
               ->latest()
-              ->take(8);
+              ->get();
         }
     ])
     ->withCount([
