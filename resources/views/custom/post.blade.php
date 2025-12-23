@@ -50,28 +50,30 @@
 
     <!-- LEFT COLUMN -->
     <div class="md:col-span-1">
-        <h2 class="text-xl font-bold mb-4">Related Categories</h2>
+       
 
-        @foreach($leftCategories as $cat)
-            <!-- Category Title -->
-            <h3 class="text-lg font-semibold mt-4">{{ $cat->name }}</h3>
+       @foreach($leftCategories as $cat)
 
-            <!-- Posts of this Category -->
-            @foreach($leftPosts->where('category_id', $cat->id)->take(5) as $post)
-                <div class="flex gap-4 border-b pb-3 mt-2">
-                    <img src="{{ $post->image?->url ?? 'https://via.placeholder.com/80x60' }}"
-                         class="w-20 h-14 object-cover rounded">
+    <h3 class="text-lg font-semibold mt-4">{{ $cat->name }}</h3>
 
-                    <div>
-                        <a href="{{ route('post.details', $post->slug) }}" class="font-medium text-gray-900">
-                            {{ $post->title }}
-                        </a>
-                        <p class="text-xs text-gray-500">{{ $post->created_at->format('M d, Y') }}</p>
-                    </div>
-                </div>
-            @endforeach
+    @foreach($leftPosts->where('category_id', $cat->id)->take(5) as $post)
+        <div class="flex gap-4 border-b pb-3 mt-2">
+            <img src="{{ $post->image?->url ?? 'https://via.placeholder.com/80x60' }}"
+                 class="w-20 h-14 object-cover rounded">
 
-        @endforeach
+            <div>
+                <a href="{{ route('post.details', $post->slug) }}" class="font-medium text-gray-900">
+                    {{ $post->title }}
+                </a>
+                <p class="text-xs text-gray-500">
+                    {{ $post->created_at->format('M d, Y') }}
+                </p>
+            </div>
+        </div>
+    @endforeach
+
+@endforeach
+
     </div>
 
 

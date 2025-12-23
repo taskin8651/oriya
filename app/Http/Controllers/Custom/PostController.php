@@ -36,15 +36,21 @@ class PostController extends Controller
         ->paginate(5); // 5 posts per page
 
 
-    // LEFT: Next 2 categories
-    $leftCategories = $allCategories->slice($currentIndex + 1, 2);
+   // LEFT: Next 2 categories (sirf jinke posts hain)
+$leftCategories = $allCategories
+    ->slice($currentIndex + 1, 2)
+    ->filter(function ($cat) {
+        return $cat->posts->where('status', 'published')->count() > 0;
+    })
+    ->take(2);
 
-    $leftPosts = Post::with('media')
-        ->whereIn('category_id', $leftCategories->pluck('id'))
-        ->where('status', 'published')
-        ->latest()
-        ->take(20)
-        ->get();
+// Posts of those categories
+$leftPosts = Post::with('media')
+    ->whereIn('category_id', $leftCategories->pluck('id'))
+    ->where('status', 'published')
+    ->latest()
+    ->get();
+
 
 
     // RIGHT: Previous categories
