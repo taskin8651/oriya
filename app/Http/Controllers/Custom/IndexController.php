@@ -47,18 +47,16 @@ class IndexController extends Controller
         ->get();
 
 // सभी categories लाओ
-   $categories = Category::with([
-    'posts' => function ($q) {
-        $q->where('status', 'published')
-          ->latest()
-          ->take(8);   // sirf latest 5 posts
-    }
-])
-->withCount(['posts as total_posts_count' => function ($q) {
-    $q->where('status', 'published'); // total published posts count
-}])
-->orderBy('name')
-->get();
+  // Controller me
+$categories = Category::with(['posts' => function($q) {
+        $q->where('status', 'published')->latest()->take(5);
+    }])
+    ->withCount(['posts as total_posts_count' => function($q) {
+        $q->where('status', 'published');
+    }])
+    ->orderBy('name')
+    ->get();
+
 
       $crousels = Crousel::all();
         
