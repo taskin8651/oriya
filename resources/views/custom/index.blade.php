@@ -310,16 +310,16 @@ function simpleCarousel(slides) {
 <section class="container mx-auto px-4 py-6">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-       @foreach($categories as $category)
+      @foreach($categories as $category)
+    @if($category->total_posts_count > 0) <!-- Only if category has posts -->
 
-    <div class="bg-white border rounded-xl p-4 shadow-sm">
+        <div class="bg-white border rounded-xl p-4 shadow-sm">
 
-        <h2 class="text-xl font-semibold border-b-2 border-red-600 pb-2 mb-4">
-            {{ $category->name }}
-        </h2>
+            <h2 class="text-xl font-semibold border-b-2 border-red-600 pb-2 mb-4">
+                {{ $category->name }}
+            </h2>
 
-        {{-- Latest 5 Posts --}}
-        @if($category->posts->count() > 0)
+            {{-- Latest 5 Posts --}}
             <div class="space-y-4">
                 @foreach($category->posts as $post)
                     <div class="flex gap-3">
@@ -340,22 +340,20 @@ function simpleCarousel(slides) {
                     </div>
                 @endforeach
             </div>
-        @else
-            <p class="text-gray-400 text-sm">No posts available</p>
-        @endif
 
-        {{-- Show More link only if total posts > 5 --}}
-@if($category->total_posts_count > 5)
-    <a href="{{ route('category.posts', $category->slug) }}"
-       class="text-red-600 font-semibold mt-3 inline-block hover:underline">
-        More News →
-    </a>
-@endif
+            {{-- Show More link only if total posts > 5 --}}
+            @if($category->total_posts_count > 5)
+                <a href="{{ route('category.posts', $category->slug) }}"
+                   class="text-red-600 font-semibold mt-3 inline-block hover:underline">
+                    More News →
+                </a>
+            @endif
 
+        </div>
 
-    </div>
-
+    @endif
 @endforeach
+
 
 
     </div>
