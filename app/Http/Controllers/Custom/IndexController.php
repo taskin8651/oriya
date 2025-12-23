@@ -48,12 +48,21 @@ class IndexController extends Controller
 
 // सभी categories लाओ
   // Controller me
-$categories = Category::with(['posts' => function($q) {
-        $q->where('status', 'published')->latest()->take(5);
-    }])
-    ->withCount(['posts as total_posts_count' => function($q) {
+$categories = Category::whereHas('posts', function ($q) {
         $q->where('status', 'published');
-    }])
+    })
+    ->with([
+        'posts' => function ($q) {
+            $q->where('status', 'published')
+              ->latest()
+              ->take(8);   // latest 8 posts
+        }
+    ])
+    ->withCount([
+        'posts as total_posts_count' => function ($q) {
+            $q->where('status', 'published');
+        }
+    ])
     ->orderBy('name')
     ->get();
 
