@@ -37,7 +37,7 @@ class IndexController extends Controller
 
     $latest12 = Post::where('status', 'published')
     ->latest()
-    ->take(12)
+    ->take(9)
     ->get();
 
     // ⭐ YouTube Videos
