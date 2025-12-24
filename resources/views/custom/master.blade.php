@@ -455,7 +455,7 @@ function liveSearch(query) {
 <a href="#"
    aria-label="X"
    class="w-12 h-12 flex items-center justify-center rounded-md bg-black hover:opacity-80 transition">
-    <i class="fab fa-x-twitter text-xl text-white"></i>
+    <i class="fab fa-twitter text-xl text-white"></i>
 </a>
 
 <!-- YouTube -->
