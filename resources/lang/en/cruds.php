@@ -167,7 +167,7 @@ return [
             'deleted_at_helper'        => ' ',
             'status'                   => 'Status',
             'status_helper'            => ' ',
-            'view'                     => 'View',
+            'view'                     => 'YouTube Link',
             'view_helper'              => ' ',
         ],
     ],

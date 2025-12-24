@@ -444,20 +444,41 @@ function liveSearch(query) {
     <p class="text-gray-400 text-sm">{{ $footerlogo->description ?? '--' }}</p>
     
     <div class="flex space-x-4 mt-4">
-        <a href="#" class="text-gray-400 hover:text-white">
-    <img src="/images/facebook.png" alt="Facebook" class="w-8 h-8">
+      <!-- Facebook -->
+<a href="#"
+   aria-label="Facebook"
+   class="w-12 h-12 flex items-center justify-center rounded-md bg-[#1877F2] hover:opacity-80 transition">
+    <i class="fab fa-facebook-f text-xl text-white"></i>
 </a>
 
-<a href="#" class="text-gray-400 hover:text-white">
-    <img src="/images/x.png" alt="Twitter" class="w-8 h-8">
+<!-- X (Twitter) -->
+<a href="#"
+   aria-label="X"
+   class="w-12 h-12 flex items-center justify-center rounded-md bg-black hover:opacity-80 transition">
+    <i class="fab fa-x-twitter text-xl text-white"></i>
 </a>
 
-<a href="https://youtube.com/@biplabiparikramanews?si=P7nNPAwLt1ZtKPfu" class="text-gray-400 hover:text-white">
-    <img src="/images/yt.png" alt="YouTube" class="w-8 h-8">
+<!-- YouTube -->
+<a href="https://youtube.com/@biplabiparikramanews?si=P7nNPAwLt1ZtKPfu"
+   aria-label="YouTube"
+   class="w-12 h-12 flex items-center justify-center rounded-md bg-[#FF0000] hover:opacity-80 transition">
+    <i class="fab fa-youtube text-xl text-white"></i>
 </a>
 
-<a href="#" class="text-gray-400 hover:text-white">
-    <img src="/images/instagram.png" alt="Instagram" class="w-8 h-8">
+<!-- Instagram -->
+<a href="#"
+   aria-label="Instagram"
+   class="w-12 h-12 flex items-center justify-center rounded-md 
+          bg-gradient-to-tr from-[#F58529] via-[#DD2A7B] to-[#8134AF] 
+          hover:opacity-80 transition">
+    <i class="fab fa-instagram text-xl text-white"></i>
+</a>
+
+<!-- WhatsApp -->
+<a href="https://api.whatsapp.com/send?text={{ urlencode(request()->url()) }}"
+   aria-label="WhatsApp"
+   class="w-12 h-12 flex items-center justify-center rounded-md bg-green-500 hover:opacity-80 transition">
+    <i class="fab fa-whatsapp text-xl text-white"></i>
 </a>
 
     </div>
