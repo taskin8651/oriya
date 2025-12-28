@@ -210,7 +210,7 @@ function liveSearch(query) {
                 class="h-12 md:h-16 object-contain">
         </div>
 
-       @isset($Banners)
+      @if(isset($Banners) && $Banners->count() > 0)
 <div class="flex-1 flex justify-center w-full">
     <div class="relative w-full max-w-[708px] h-[60px] sm:h-[48px] md:h-[56px] lg:h-[80px] overflow-hidden rounded-lg border border-dashed border-gray-400 bg-gray-200">
 
@@ -235,7 +235,7 @@ function liveSearch(query) {
 
     </div>
 </div>
-@endisset
+@endif
 <script>
     const carousel = document.getElementById('adCarousel');
     const slides = carousel.children;
