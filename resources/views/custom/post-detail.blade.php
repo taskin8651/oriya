@@ -102,30 +102,63 @@
                 {!! $post->content !!}
             </div>
 
-         @php
-    // View column me YouTube embed link aayega (optional)
-    $youtubeUrl = $post->view ?? null; 
+@php
+    $videoContent = $post->view ?? null;
+
+    // iframe check
+    $isIframe = $videoContent && str_contains($videoContent, '<iframe>');
+
+    function youtubeEmbedUrl($url)
+    {
+        // youtu.be short link
+        if (str_contains($url, 'youtu.be/')) {
+            $path = parse_url($url, PHP_URL_PATH);
+            return 'https://www.youtube.com/embed/' . trim($path, '/');
+        }
+
+        // youtube.com/watch?v=
+        if (str_contains($url, 'youtube.com/watch')) {
+            parse_str(parse_url($url, PHP_URL_QUERY), $vars);
+            return 'https://www.youtube.com/embed/' . ($vars['v'] ?? '');
+        }
+
+        // already embed or other platform
+        return $url;
+    }
 @endphp
 <div class="bg-white rounded-xl shadow-sm p-4 mb-6">
-
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
         <!-- LEFT SIDE — YouTube -->
-       <div class="md:col-span-2">
-          @if($youtubeUrl)
-    <div class="w-full aspect-video mb-4">
-        <iframe 
-            src="{{ $youtubeUrl }}"
-            class="w-full h-full rounded-lg"
-            frameborder="0"
-            allowfullscreen> 
-        </iframe>
-    </div>
-@else
-    <div class="bg-gray-100 text-gray-600 p-4 rounded-lg text-center mb-4">
-        No video available for this news.
-    </div>
-@endif
+        <div class="md:col-span-2">
+
+            @if($videoContent)
+
+                <div class="w-full aspect-video mb-4 rounded-lg overflow-hidden">
+
+                    @if($isIframe)
+                        {{-- iframe directly render --}}
+                        {!! $videoContent !!}
+                    @else
+                        {{-- auto-converted YouTube URL --}}
+                        <iframe
+                            src="{{ youtubeEmbedUrl($videoContent) }}"
+                            class="w-full h-full"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
+                        </iframe>
+                    @endif
+
+                </div>
+
+            @else
+                <div class="bg-gray-100 text-gray-600 p-4 rounded-lg text-center mb-4">
+                    No video available for this news.
+                </div>
+            @endif
+
+
 
 
 
@@ -173,7 +206,7 @@
     </a>
     
 
-   <a href="{{ $youtubeUrl }}" target="_blank"
+   <a href="{{ $videoContent }}" target="_blank"
    class="inline-flex items-center bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition">
 
     <!-- Desktop Text -->
