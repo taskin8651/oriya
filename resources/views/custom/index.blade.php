@@ -251,56 +251,55 @@ function simpleCarousel(slides) {
         <i class="fa-solid fa-play-circle mr-2"></i> ताज़ा वीडियो
     </h2>
 
-    <div class="mt-4 space-y-4">
+  
+<div class="mt-4 space-y-4">
+
+    @foreach($youtubeVideos as $video)
+
         @php
-    function getYouTubeId($url) {
-        // If already embed URL
-        if (preg_match('/embed\/([^\?&]+)/', $url, $match)) {
-            return $match[1];
-        }
+    $url = $video->url;
+    $videoId = null;
 
-        // Normal YouTube watch URL
-        if (preg_match('/v=([^\?&]+)/', $url, $match)) {
-            return $match[1];
-        }
-
-        // youtu.be short URL
-        if (preg_match('/youtu\.be\/([^\?&]+)/', $url, $match)) {
-            return $match[1];
-        }
-
-        return null;
+    if (preg_match('~(?:youtube\.com)/(?:shorts|embed)/([^?&/]+)~', $url, $match)) {
+        $videoId = $match[1];
+    } elseif (preg_match('~[?&]v=([^?&]+)~', $url, $match)) {
+        $videoId = $match[1];
+    } elseif (preg_match('~youtu\.be/([^?&/]+)~', $url, $match)) {
+        $videoId = $match[1];
     }
 @endphp
-@foreach($youtubeVideos as $video)
-    @php 
-        $videoId = getYouTubeId($video->url);
-    @endphp
+        
 
-    <div class="rounded border overflow-hidden news-card">
-        <div class="relative">
-            <iframe 
-                width="100%" 
-                height="200" 
-                src="https://www.youtube.com/embed/{{ $videoId }}"
-                title="{{ $video->description }}"
-                frameborder="0" 
-                allowfullscreen>
-            </iframe>
-        </div>
+        @if($videoId)
+            <div class="rounded border overflow-hidden news-card">
+                <div class="relative">
+                    <iframe
+                        width="100%"
+                        height="200"
+                        src="https://www.youtube.com/embed/{{ $videoId }}"
+                        title="{{ $video->description }}"
+                        frameborder="0"
+                        allowfullscreen>
+                    </iframe>
+                </div>
 
-        <div class="p-3">
-            <h3 class="font-semibold">{{ $video->description }}</h3>
-            <p class="text-xs text-gray-500 mt-1">
-                <i class="fa-regular fa-clock mr-1"></i> 
-                {{ $video->created_at->diffForHumans() }}
-            </p>
-        </div>
-    </div>
-@endforeach
+                <div class="p-3">
+                    <h3 class="font-semibold">
+                        {{ $video->description }}
+                    </h3>
 
+                    <p class="text-xs text-gray-500 mt-1">
+                        <i class="fa-regular fa-clock mr-1"></i>
+                        {{ $video->created_at->diffForHumans() }}
+                    </p>
+                </div>
+            </div>
+        @endif
 
-    </div>
+    @endforeach
+
+</div>
+
 </div>
 
         </aside>
