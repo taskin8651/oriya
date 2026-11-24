@@ -107,23 +107,13 @@
 
     // iframe check
     $isIframe = $videoContent && str_contains($videoContent, '<iframe>');
+    $videoEmbedUrl = $videoContent;
 
-    function youtubeEmbedUrl($url)
-    {
-        // youtu.be short link
-        if (str_contains($url, 'youtu.be/')) {
-            $path = parse_url($url, PHP_URL_PATH);
-            return 'https://www.youtube.com/embed/' . trim($path, '/');
-        }
-
-        // youtube.com/watch?v=
-        if (str_contains($url, 'youtube.com/watch')) {
-            parse_str(parse_url($url, PHP_URL_QUERY), $vars);
-            return 'https://www.youtube.com/embed/' . ($vars['v'] ?? '');
-        }
-
-        // already embed or other platform
-        return $url;
+    if ($videoContent && str_contains($videoContent, 'youtu.be/')) {
+        $videoEmbedUrl = 'https://www.youtube.com/embed/' . trim(parse_url($videoContent, PHP_URL_PATH), '/');
+    } elseif ($videoContent && str_contains($videoContent, 'youtube.com/watch')) {
+        parse_str(parse_url($videoContent, PHP_URL_QUERY) ?? '', $videoQuery);
+        $videoEmbedUrl = 'https://www.youtube.com/embed/' . ($videoQuery['v'] ?? '');
     }
 @endphp
 <div class="bg-white rounded-xl shadow-sm p-4 mb-6">
@@ -142,7 +132,7 @@
                     @else
                         {{-- auto-converted YouTube URL --}}
                         <iframe
-                            src="{{ youtubeEmbedUrl($videoContent) }}"
+                            src="{{ $videoEmbedUrl }}"
                             class="w-full h-full"
                             frameborder="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
