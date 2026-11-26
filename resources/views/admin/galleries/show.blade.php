@@ -1,67 +1,20 @@
-@extends('layouts.admin')
+@extends('layouts.admin-show', ['resource' => 'gallery', 'listRoute' => 'admin.galleries.index', 'record' => $gallery, 'recordTitle' => App\Models\Gallery::TITLE_SELECT[$gallery->title] ?? null])
+
 @section('content')
-
-<div class="card">
-    <div class="card-header">
-        {{ trans('global.show') }} {{ trans('cruds.gallery.title') }}
-    </div>
-
-    <div class="card-body">
-        <div class="form-group">
-            <div class="form-group">
-                <a class="btn btn-default" href="{{ route('admin.galleries.index') }}">
-                    {{ trans('global.back_to_list') }}
-                </a>
-            </div>
-            <table class="table table-bordered table-striped">
-                <tbody>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.gallery.fields.id') }}
-                        </th>
-                        <td>
-                            {{ $gallery->id }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.gallery.fields.title') }}
-                        </th>
-                        <td>
-                            {{ App\Models\Gallery::TITLE_SELECT[$gallery->title] ?? '' }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.gallery.fields.description') }}
-                        </th>
-                        <td>
-                            {!! $gallery->description !!}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.gallery.fields.upload_file') }}
-                        </th>
-                        <td>
-                            @if($gallery->upload_file)
-                                <a href="{{ $gallery->upload_file->getUrl() }}" target="_blank">
-                                    {{ trans('global.view_file') }}
-                                </a>
-                            @endif
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="form-group">
-                <a class="btn btn-default" href="{{ route('admin.galleries.index') }}">
-                    {{ trans('global.back_to_list') }}
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
+    <x-admin.detail-field :label="trans('cruds.gallery.fields.id')">
+        {{ $gallery->id }}
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.gallery.fields.title')">
+        {{ App\Models\Gallery::TITLE_SELECT[$gallery->title] ?? '' }}
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.gallery.fields.description')" wide prose>
+        {!! $gallery->description !!}
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.gallery.fields.upload_file')">
+        @if($gallery->upload_file)
+            <a href="{{ $gallery->upload_file->getUrl() }}" class="detail-file" target="_blank" rel="noopener">
+                <i class="far fa-file" aria-hidden="true"></i> {{ trans('global.view_file') }}
+            </a>
+        @endif
+    </x-admin.detail-field>
 @endsection

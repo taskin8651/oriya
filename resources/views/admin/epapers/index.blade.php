@@ -1,61 +1,52 @@
-@extends('layouts.admin')
-@section('content')
-@can('epaper_create')
-    <div style="margin-bottom: 10px;" class="row">
-        <div class="col-lg-12">
-            <a class="btn btn-success" href="{{ route('admin.epapers.create') }}">
-                {{ trans('global.add') }} {{ trans('cruds.epaper.title_singular') }}
-            </a>
-            <button class="btn btn-warning" data-toggle="modal" data-target="#csvImportModal">
-                {{ trans('global.app_csvImport') }}
-            </button>
-            @include('csvImport.modal', ['model' => 'Epaper', 'route' => 'admin.epapers.parseCsvImport'])
-        </div>
-    </div>
-@endcan
-<div class="card">
-    <div class="card-header">
-        {{ trans('cruds.epaper.title_singular') }} {{ trans('global.list') }}
-    </div>
+@extends('layouts.admin', ['adminIndexTitle' => trans('cruds.epaper.title'), 'adminIndexCount' => count($epapers)])
 
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class=" table table-bordered table-striped table-hover datatable datatable-Epaper">
+@section('indexActions')
+@can('epaper_create')
+    <a class="btn index-add" href="{{ route('admin.epapers.create') }}">
+        <i class="fas fa-plus" aria-hidden="true"></i>
+        {{ trans('global.add') }} {{ trans('cruds.epaper.title_singular') }}
+    </a>
+    <button type="button" class="btn index-import" data-toggle="modal" data-target="#csvImportModal">
+        <i class="fas fa-file-upload" aria-hidden="true"></i>
+        {{ trans('global.app_csvImport') }}
+    </button>
+    @include('csvImport.modal', ['model' => 'Epaper', 'route' => 'admin.epapers.parseCsvImport'])
+@endcan
+@endsection
+
+@section('content')
+            <table class="table table-hover datatable datatable-Epaper">
                 <thead>
                     <tr>
-                        <th width="10">
-
-                        </th>
-                        <th>
+                        <th scope="col" class="index-selection"><span class="sr-only">Select rows</span></th>
+                        <th scope="col">
                             {{ trans('cruds.epaper.fields.id') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.epaper.fields.title') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.epaper.fields.description') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.epaper.fields.publication_date') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.epaper.fields.pdf_file') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.epaper.fields.cover_image') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.epaper.fields.edition') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.epaper.fields.url') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.epaper.fields.status') }}
                         </th>
-                        <th>
-                            &nbsp;
-                        </th>
+                        <th scope="col" class="index-row-actions">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -97,9 +88,9 @@
                                 {{ $epaper->url ?? '' }}
                             </td>
                             <td>
-                                {{ App\Models\Epaper::STATUS_SELECT[$epaper->status] ?? '' }}
+                                <span class="index-status" data-status="{{ $epaper->status }}">{{ App\Models\Epaper::STATUS_SELECT[$epaper->status] ?? '?' }}</span>
                             </td>
-                            <td>
+                            <td class="index-row-actions">
                                 @can('epaper_show')
                                     <a class="btn btn-xs btn-primary" href="{{ route('admin.epapers.show', $epaper->id) }}">
                                         {{ trans('global.view') }}
@@ -126,13 +117,8 @@
                     @endforeach
                 </tbody>
             </table>
-        </div>
-    </div>
-</div>
-
-
-
 @endsection
+
 @section('scripts')
 @parent
 <script>

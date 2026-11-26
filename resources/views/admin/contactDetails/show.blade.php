@@ -1,71 +1,19 @@
-@extends('layouts.admin')
+@extends('layouts.admin-show', ['resource' => 'contactDetail', 'listRoute' => 'admin.contact-details.index', 'record' => $contactDetail])
+
 @section('content')
-
-<div class="card">
-    <div class="card-header">
-        {{ trans('global.show') }} {{ trans('cruds.contactDetail.title') }}
-    </div>
-
-    <div class="card-body">
-        <div class="form-group">
-            <div class="form-group">
-                <a class="btn btn-default" href="{{ route('admin.contact-details.index') }}">
-                    {{ trans('global.back_to_list') }}
-                </a>
-            </div>
-            <table class="table table-bordered table-striped">
-                <tbody>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.contactDetail.fields.id') }}
-                        </th>
-                        <td>
-                            {{ $contactDetail->id }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.contactDetail.fields.number') }}
-                        </th>
-                        <td>
-                            {{ $contactDetail->number }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.contactDetail.fields.email') }}
-                        </th>
-                        <td>
-                            {{ $contactDetail->email }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.contactDetail.fields.address') }}
-                        </th>
-                        <td>
-                            {{ $contactDetail->address }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.contactDetail.fields.location_url') }}
-                        </th>
-                        <td>
-                            {{ $contactDetail->location_url }}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="form-group">
-                <a class="btn btn-default" href="{{ route('admin.contact-details.index') }}">
-                    {{ trans('global.back_to_list') }}
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
+    <x-admin.detail-field :label="trans('cruds.contactDetail.fields.id')">
+        {{ $contactDetail->id }}
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.contactDetail.fields.number')">
+        {{ $contactDetail->number }}
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.contactDetail.fields.email')">
+        {{ $contactDetail->email }}
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.contactDetail.fields.address')" wide>
+        {{ $contactDetail->address }}
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.contactDetail.fields.location_url')">
+        {{ $contactDetail->location_url }}
+    </x-admin.detail-field>
 @endsection

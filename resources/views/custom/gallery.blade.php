@@ -1,4 +1,4 @@
-@extends('custom.master')
+@extends('custom.master', ['sharePreview' => ['title' => 'Gallery | Biplabi Parikrama']])
 
 @section('content')
 <div class="container mx-auto px-4 py-8">

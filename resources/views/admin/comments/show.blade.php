@@ -1,71 +1,21 @@
-@extends('layouts.admin')
+@extends('layouts.admin-show', ['resource' => 'comment', 'listRoute' => 'admin.comments.index', 'record' => $comment])
+
 @section('content')
-
-<div class="card">
-    <div class="card-header">
-        {{ trans('global.show') }} {{ trans('cruds.comment.title') }}
-    </div>
-
-    <div class="card-body">
-        <div class="form-group">
-            <div class="form-group">
-                <a class="btn btn-default" href="{{ route('admin.comments.index') }}">
-                    {{ trans('global.back_to_list') }}
-                </a>
-            </div>
-            <table class="table table-bordered table-striped">
-                <tbody>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.comment.fields.id') }}
-                        </th>
-                        <td>
-                            {{ $comment->id }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.comment.fields.post') }}
-                        </th>
-                        <td>
-                            {{ $comment->post->title ?? '' }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.comment.fields.user') }}
-                        </th>
-                        <td>
-                            {{ $comment->user->name ?? '' }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.comment.fields.comment_text') }}
-                        </th>
-                        <td>
-                            {{ $comment->comment_text }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.comment.fields.status') }}
-                        </th>
-                        <td>
-                            {{ App\Models\Comment::STATUS_SELECT[$comment->status] ?? '' }}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="form-group">
-                <a class="btn btn-default" href="{{ route('admin.comments.index') }}">
-                    {{ trans('global.back_to_list') }}
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
+    <x-admin.detail-field :label="trans('cruds.comment.fields.id')">
+        {{ $comment->id }}
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.comment.fields.post')">
+        {{ $comment->post->title ?? '' }}
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.comment.fields.user')">
+        {{ $comment->user->name ?? '' }}
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.comment.fields.comment_text')" wide>
+        {{ $comment->comment_text }}
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.comment.fields.status')">
+        @if(isset(App\Models\Comment::STATUS_SELECT[$comment->status]))
+            <span class="detail-status" data-status="{{ $comment->status }}">{{ App\Models\Comment::STATUS_SELECT[$comment->status] }}</span>
+        @endif
+    </x-admin.detail-field>
 @endsection

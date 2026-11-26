@@ -1,16 +1,20 @@
 @extends('layouts.admin')
+
+@php
+    $listRoute = 'admin.galleries.index';
+    $adminForm = [
+        'title' => trans('global.create') . ' ' . trans('cruds.gallery.title_singular'),
+        'listLabel' => trans('cruds.gallery.title'),
+        'listRoute' => $listRoute,
+        'listUrl' => Gate::allows('gallery_access') ? route($listRoute) : null,
+    ];
+@endphp
+
 @section('content')
-
-<div class="card">
-    <div class="card-header">
-        {{ trans('global.create') }} {{ trans('cruds.gallery.title_singular') }}
-    </div>
-
-    <div class="card-body">
-        <form method="POST" action="{{ route("admin.galleries.store") }}" enctype="multipart/form-data">
+        <form class="admin-record-form" method="POST" action="{{ route("admin.galleries.store") }}" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
-                <label>{{ trans('cruds.gallery.fields.title') }}</label>
+                <label for="title">{{ trans('cruds.gallery.fields.title') }}</label>
                 <select class="form-control {{ $errors->has('title') ? 'is-invalid' : '' }}" name="title" id="title">
                     <option value disabled {{ old('title', null) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
                     @foreach(App\Models\Gallery::TITLE_SELECT as $key => $label)
@@ -56,17 +60,8 @@
                 @endif
                 <span class="help-block">{{ trans('cruds.gallery.fields.upload_file_helper') }}</span>
             </div>
-            <div class="form-group">
-                <button class="btn btn-danger" type="submit">
-                    {{ trans('global.save') }}
-                </button>
-            </div>
+            @include('partials.admin-form-actions')
         </form>
-    </div>
-</div>
-
-
-
 @endsection
 
 @section('scripts')
@@ -97,7 +92,7 @@
                     return reject(response && response.message ? `${genericErrorText}\n${xhr.status} ${response.message}` : `${genericErrorText}\n ${xhr.status} ${xhr.statusText}`);
                   }
 
-                  $('form').append('<input type="hidden" name="ck-media[]" value="' + response.id + '">');
+                  $('.admin-record-form').append('<input type="hidden" name="ck-media[]" value="' + response.id + '">');
 
                   resolve({ default: response.url });
                 });
@@ -147,13 +142,13 @@
       size: 20
     },
     success: function (file, response) {
-      $('form').find('input[name="upload_file"]').remove()
-      $('form').append('<input type="hidden" name="upload_file" value="' + response.name + '">')
+      $('.admin-record-form').find('input[name="upload_file"]').remove()
+      $('.admin-record-form').append('<input type="hidden" name="upload_file" value="' + response.name + '">')
     },
     removedfile: function (file) {
       file.previewElement.remove()
       if (file.status !== 'error') {
-        $('form').find('input[name="upload_file"]').remove()
+        $('.admin-record-form').find('input[name="upload_file"]').remove()
         this.options.maxFiles = this.options.maxFiles + 1
       }
     },
@@ -162,7 +157,7 @@
       var file = {!! json_encode($gallery->upload_file) !!}
           this.options.addedfile.call(this, file)
       file.previewElement.classList.add('dz-complete')
-      $('form').append('<input type="hidden" name="upload_file" value="' + file.file_name + '">')
+      $('.admin-record-form').append('<input type="hidden" name="upload_file" value="' + file.file_name + '">')
       this.options.maxFiles = this.options.maxFiles - 1
 @endif
     },

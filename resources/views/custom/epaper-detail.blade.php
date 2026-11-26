@@ -1,4 +1,8 @@
-@extends('custom.master')
+@extends('custom.master', ['sharePreview' => [
+    'title' => $epaper->title,
+    'description' => $epaper->description,
+    'image' => $epaper->cover_image,
+]])
 
 @section('content')
 <div class="container mx-auto px-4 py-6">

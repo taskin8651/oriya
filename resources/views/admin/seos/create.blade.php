@@ -1,13 +1,17 @@
 @extends('layouts.admin')
+
+@php
+    $listRoute = 'admin.seos.index';
+    $adminForm = [
+        'title' => trans('global.create') . ' ' . trans('cruds.seo.title_singular'),
+        'listLabel' => trans('cruds.seo.title'),
+        'listRoute' => $listRoute,
+        'listUrl' => Gate::allows('seo_access') ? route($listRoute) : null,
+    ];
+@endphp
+
 @section('content')
-
-<div class="card">
-    <div class="card-header">
-        {{ trans('global.create') }} {{ trans('cruds.seo.title_singular') }}
-    </div>
-
-    <div class="card-body">
-        <form method="POST" action="{{ route("admin.seos.store") }}" enctype="multipart/form-data">
+        <form class="admin-record-form" method="POST" action="{{ route("admin.seos.store") }}" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
                 <label for="meta_tags">{{ trans('cruds.seo.fields.meta_tags') }}</label>
@@ -80,17 +84,8 @@
                 @endif
                 <span class="help-block">{{ trans('cruds.seo.fields.canonical_url_helper') }}</span>
             </div>
-            <div class="form-group">
-                <button class="btn btn-danger" type="submit">
-                    {{ trans('global.save') }}
-                </button>
-            </div>
+            @include('partials.admin-form-actions')
         </form>
-    </div>
-</div>
-
-
-
 @endsection
 
 @section('scripts')
@@ -110,13 +105,13 @@
       height: 4096
     },
     success: function (file, response) {
-      $('form').find('input[name="social_share_image"]').remove()
-      $('form').append('<input type="hidden" name="social_share_image" value="' + response.name + '">')
+      $('.admin-record-form').find('input[name="social_share_image"]').remove()
+      $('.admin-record-form').append('<input type="hidden" name="social_share_image" value="' + response.name + '">')
     },
     removedfile: function (file) {
       file.previewElement.remove()
       if (file.status !== 'error') {
-        $('form').find('input[name="social_share_image"]').remove()
+        $('.admin-record-form').find('input[name="social_share_image"]').remove()
         this.options.maxFiles = this.options.maxFiles + 1
       }
     },
@@ -126,7 +121,7 @@
           this.options.addedfile.call(this, file)
       this.options.thumbnail.call(this, file, file.preview ?? file.preview_url)
       file.previewElement.classList.add('dz-complete')
-      $('form').append('<input type="hidden" name="social_share_image" value="' + file.file_name + '">')
+      $('.admin-record-form').append('<input type="hidden" name="social_share_image" value="' + file.file_name + '">')
       this.options.maxFiles = this.options.maxFiles - 1
 @endif
     },

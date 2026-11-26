@@ -1,43 +1,32 @@
-@extends('layouts.admin')
+@extends('layouts.admin', ['adminIndexTitle' => trans('cruds.auditLog.title'), 'adminIndexCount' => count($auditLogs)])
+
 @section('content')
-
-<div class="card">
-    <div class="card-header">
-        {{ trans('cruds.auditLog.title_singular') }} {{ trans('global.list') }}
-    </div>
-
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class=" table table-bordered table-striped table-hover datatable datatable-AuditLog">
+            <table class="table table-hover datatable datatable-AuditLog">
                 <thead>
                     <tr>
-                        <th width="10">
-
-                        </th>
-                        <th>
+                        <th scope="col" class="index-selection"><span class="sr-only">Select rows</span></th>
+                        <th scope="col">
                             {{ trans('cruds.auditLog.fields.id') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.auditLog.fields.description') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.auditLog.fields.subject_id') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.auditLog.fields.subject_type') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.auditLog.fields.user_id') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.auditLog.fields.host') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.auditLog.fields.created_at') }}
                         </th>
-                        <th>
-                            &nbsp;
-                        </th>
+                        <th scope="col" class="index-row-actions">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -67,7 +56,7 @@
                             <td>
                                 {{ $auditLog->created_at ?? '' }}
                             </td>
-                            <td>
+                            <td class="index-row-actions">
                                 @can('audit_log_show')
                                     <a class="btn btn-xs btn-primary" href="{{ route('admin.audit-logs.show', $auditLog->id) }}">
                                         {{ trans('global.view') }}
@@ -82,13 +71,8 @@
                     @endforeach
                 </tbody>
             </table>
-        </div>
-    </div>
-</div>
-
-
-
 @endsection
+
 @section('scripts')
 @parent
 <script>

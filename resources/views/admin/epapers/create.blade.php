@@ -1,13 +1,17 @@
 @extends('layouts.admin')
+
+@php
+    $listRoute = 'admin.epapers.index';
+    $adminForm = [
+        'title' => trans('global.create') . ' ' . trans('cruds.epaper.title_singular'),
+        'listLabel' => trans('cruds.epaper.title'),
+        'listRoute' => $listRoute,
+        'listUrl' => Gate::allows('epaper_access') ? route($listRoute) : null,
+    ];
+@endphp
+
 @section('content')
-
-<div class="card">
-    <div class="card-header">
-        {{ trans('global.create') }} {{ trans('cruds.epaper.title_singular') }}
-    </div>
-
-    <div class="card-body">
-        <form method="POST" action="{{ route("admin.epapers.store") }}" enctype="multipart/form-data">
+        <form class="admin-record-form" method="POST" action="{{ route("admin.epapers.store") }}" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
                 <label for="title">{{ trans('cruds.epaper.fields.title') }}</label>
@@ -82,7 +86,7 @@
                 <span class="help-block">{{ trans('cruds.epaper.fields.url_helper') }}</span>
             </div>
             <div class="form-group">
-                <label>{{ trans('cruds.epaper.fields.status') }}</label>
+                <label for="status">{{ trans('cruds.epaper.fields.status') }}</label>
                 <select class="form-control {{ $errors->has('status') ? 'is-invalid' : '' }}" name="status" id="status">
                     <option value disabled {{ old('status', null) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
                     @foreach(App\Models\Epaper::STATUS_SELECT as $key => $label)
@@ -96,17 +100,8 @@
                 @endif
                 <span class="help-block">{{ trans('cruds.epaper.fields.status_helper') }}</span>
             </div>
-            <div class="form-group">
-                <button class="btn btn-danger" type="submit">
-                    {{ trans('global.save') }}
-                </button>
-            </div>
+            @include('partials.admin-form-actions')
         </form>
-    </div>
-</div>
-
-
-
 @endsection
 
 @section('scripts')
@@ -123,13 +118,13 @@
       size: 20
     },
     success: function (file, response) {
-      $('form').find('input[name="pdf_file"]').remove()
-      $('form').append('<input type="hidden" name="pdf_file" value="' + response.name + '">')
+      $('.admin-record-form').find('input[name="pdf_file"]').remove()
+      $('.admin-record-form').append('<input type="hidden" name="pdf_file" value="' + response.name + '">')
     },
     removedfile: function (file) {
       file.previewElement.remove()
       if (file.status !== 'error') {
-        $('form').find('input[name="pdf_file"]').remove()
+        $('.admin-record-form').find('input[name="pdf_file"]').remove()
         this.options.maxFiles = this.options.maxFiles + 1
       }
     },
@@ -138,7 +133,7 @@
       var file = {!! json_encode($epaper->pdf_file) !!}
           this.options.addedfile.call(this, file)
       file.previewElement.classList.add('dz-complete')
-      $('form').append('<input type="hidden" name="pdf_file" value="' + file.file_name + '">')
+      $('.admin-record-form').append('<input type="hidden" name="pdf_file" value="' + file.file_name + '">')
       this.options.maxFiles = this.options.maxFiles - 1
 @endif
     },
@@ -176,13 +171,13 @@
       height: 4096
     },
     success: function (file, response) {
-      $('form').find('input[name="cover_image"]').remove()
-      $('form').append('<input type="hidden" name="cover_image" value="' + response.name + '">')
+      $('.admin-record-form').find('input[name="cover_image"]').remove()
+      $('.admin-record-form').append('<input type="hidden" name="cover_image" value="' + response.name + '">')
     },
     removedfile: function (file) {
       file.previewElement.remove()
       if (file.status !== 'error') {
-        $('form').find('input[name="cover_image"]').remove()
+        $('.admin-record-form').find('input[name="cover_image"]').remove()
         this.options.maxFiles = this.options.maxFiles + 1
       }
     },
@@ -192,7 +187,7 @@
           this.options.addedfile.call(this, file)
       this.options.thumbnail.call(this, file, file.preview ?? file.preview_url)
       file.previewElement.classList.add('dz-complete')
-      $('form').append('<input type="hidden" name="cover_image" value="' + file.file_name + '">')
+      $('.admin-record-form').append('<input type="hidden" name="cover_image" value="' + file.file_name + '">')
       this.options.maxFiles = this.options.maxFiles - 1
 @endif
     },

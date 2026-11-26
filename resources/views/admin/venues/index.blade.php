@@ -1,55 +1,46 @@
-@extends('layouts.admin')
-@section('content')
-@can('venue_create')
-    <div style="margin-bottom: 10px;" class="row">
-        <div class="col-lg-12">
-            <a class="btn btn-success" href="{{ route('admin.venues.create') }}">
-                {{ trans('global.add') }} {{ trans('cruds.venue.title_singular') }}
-            </a>
-            <button class="btn btn-warning" data-toggle="modal" data-target="#csvImportModal">
-                {{ trans('global.app_csvImport') }}
-            </button>
-            @include('csvImport.modal', ['model' => 'Venue', 'route' => 'admin.venues.parseCsvImport'])
-        </div>
-    </div>
-@endcan
-<div class="card">
-    <div class="card-header">
-        {{ trans('cruds.venue.title_singular') }} {{ trans('global.list') }}
-    </div>
+@extends('layouts.admin', ['adminIndexTitle' => trans('cruds.venue.title'), 'adminIndexCount' => count($venues)])
 
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class=" table table-bordered table-striped table-hover datatable datatable-Venue">
+@section('indexActions')
+@can('venue_create')
+    <a class="btn index-add" href="{{ route('admin.venues.create') }}">
+        <i class="fas fa-plus" aria-hidden="true"></i>
+        {{ trans('global.add') }} {{ trans('cruds.venue.title_singular') }}
+    </a>
+    <button type="button" class="btn index-import" data-toggle="modal" data-target="#csvImportModal">
+        <i class="fas fa-file-upload" aria-hidden="true"></i>
+        {{ trans('global.app_csvImport') }}
+    </button>
+    @include('csvImport.modal', ['model' => 'Venue', 'route' => 'admin.venues.parseCsvImport'])
+@endcan
+@endsection
+
+@section('content')
+            <table class="table table-hover datatable datatable-Venue">
                 <thead>
                     <tr>
-                        <th width="10">
-
-                        </th>
-                        <th>
+                        <th scope="col" class="index-selection"><span class="sr-only">Select rows</span></th>
+                        <th scope="col">
                             {{ trans('cruds.venue.fields.id') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.venue.fields.name') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.venue.fields.address') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.venue.fields.city') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.venue.fields.state') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.venue.fields.pincode') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.venue.fields.status') }}
                         </th>
-                        <th>
-                            &nbsp;
-                        </th>
+                        <th scope="col" class="index-row-actions">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -77,9 +68,9 @@
                                 {{ $venue->pincode ?? '' }}
                             </td>
                             <td>
-                                {{ App\Models\Venue::STATUS_SELECT[$venue->status] ?? '' }}
+                                <span class="index-status" data-status="{{ $venue->status }}">{{ App\Models\Venue::STATUS_SELECT[$venue->status] ?? '?' }}</span>
                             </td>
-                            <td>
+                            <td class="index-row-actions">
                                 @can('venue_show')
                                     <a class="btn btn-xs btn-primary" href="{{ route('admin.venues.show', $venue->id) }}">
                                         {{ trans('global.view') }}
@@ -106,13 +97,8 @@
                     @endforeach
                 </tbody>
             </table>
-        </div>
-    </div>
-</div>
-
-
-
 @endsection
+
 @section('scripts')
 @parent
 <script>

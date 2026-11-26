@@ -1,13 +1,17 @@
 @extends('layouts.admin')
+
+@php
+    $listRoute = 'admin.categories.index';
+    $adminForm = [
+        'title' => trans('global.create') . ' ' . trans('cruds.category.title_singular'),
+        'listLabel' => trans('cruds.category.title'),
+        'listRoute' => $listRoute,
+        'listUrl' => Gate::allows('category_access') ? route($listRoute) : null,
+    ];
+@endphp
+
 @section('content')
-
-<div class="card">
-    <div class="card-header">
-        {{ trans('global.create') }} {{ trans('cruds.category.title_singular') }}
-    </div>
-
-    <div class="card-body">
-        <form method="POST" action="{{ route("admin.categories.store") }}" enctype="multipart/form-data">
+        <form class="admin-record-form" method="POST" action="{{ route("admin.categories.store") }}" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
                 <label for="name">{{ trans('cruds.category.fields.name') }}</label>
@@ -39,15 +43,6 @@
                 @endif
                 <span class="help-block">{{ trans('cruds.category.fields.description_helper') }}</span>
             </div>
-            <div class="form-group">
-                <button class="btn btn-danger" type="submit">
-                    {{ trans('global.save') }}
-                </button>
-            </div>
+            @include('partials.admin-form-actions')
         </form>
-    </div>
-</div>
-
-
-
 @endsection

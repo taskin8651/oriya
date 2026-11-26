@@ -1,4 +1,8 @@
-@extends('custom.master')
+@extends('custom.master', ['sharePreview' => [
+    'title' => $category->name,
+    'description' => $category->description,
+    'image' => $centerPosts->first()?->image,
+]])
 
 @section('content')
 

@@ -1,64 +1,55 @@
-@extends('layouts.admin')
-@section('content')
-@can('post_create')
-    <div style="margin-bottom: 10px;" class="row">
-        <div class="col-lg-12">
-            <a class="btn btn-success" href="{{ route('admin.posts.create') }}">
-                {{ trans('global.add') }} {{ trans('cruds.post.title_singular') }}
-            </a>
-            <button class="btn btn-warning" data-toggle="modal" data-target="#csvImportModal">
-                {{ trans('global.app_csvImport') }}
-            </button>
-            @include('csvImport.modal', ['model' => 'Post', 'route' => 'admin.posts.parseCsvImport'])
-        </div>
-    </div>
-@endcan
-<div class="card">
-    <div class="card-header">
-        {{ trans('cruds.post.title_singular') }} {{ trans('global.list') }}
-    </div>
+@extends('layouts.admin', ['adminIndexTitle' => trans('cruds.post.title'), 'adminIndexCount' => count($posts)])
 
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class=" table table-bordered table-striped table-hover datatable datatable-Post">
+@section('indexActions')
+@can('post_create')
+    <a class="btn index-add" href="{{ route('admin.posts.create') }}">
+        <i class="fas fa-plus" aria-hidden="true"></i>
+        {{ trans('global.add') }} {{ trans('cruds.post.title_singular') }}
+    </a>
+    <button type="button" class="btn index-import" data-toggle="modal" data-target="#csvImportModal">
+        <i class="fas fa-file-upload" aria-hidden="true"></i>
+        {{ trans('global.app_csvImport') }}
+    </button>
+    @include('csvImport.modal', ['model' => 'Post', 'route' => 'admin.posts.parseCsvImport'])
+@endcan
+@endsection
+
+@section('content')
+            <table class="table table-hover datatable datatable-Post">
                 <thead>
                     <tr>
-                        <th width="10">
-
-                        </th>
-                        <th>
+                        <th scope="col" class="index-selection"><span class="sr-only">Select rows</span></th>
+                        <th scope="col">
                             {{ trans('cruds.post.fields.id') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.post.fields.title') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.post.fields.slug') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.post.fields.short_description') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.post.fields.image') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.post.fields.category') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.post.fields.author') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.post.fields.tag') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.post.fields.status') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.post.fields.view') }}
                         </th>
-                        <th>
-                            &nbsp;
-                        </th>
+                        <th scope="col" class="index-row-actions">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -98,12 +89,12 @@
                                 @endforeach
                             </td>
                             <td>
-                                {{ App\Models\Post::STATUS_SELECT[$post->status] ?? '' }}
+                                <span class="index-status" data-status="{{ $post->status }}">{{ App\Models\Post::STATUS_SELECT[$post->status] ?? '?' }}</span>
                             </td>
                             <td>
                                 {{ $post->view ?? '' }}
                             </td>
-                            <td>
+                            <td class="index-row-actions">
                                 @can('post_show')
                                     <a class="btn btn-xs btn-primary" href="{{ route('admin.posts.show', $post->id) }}">
                                         {{ trans('global.view') }}
@@ -130,13 +121,8 @@
                     @endforeach
                 </tbody>
             </table>
-        </div>
-    </div>
-</div>
-
-
-
 @endsection
+
 @section('scripts')
 @parent
 <script>

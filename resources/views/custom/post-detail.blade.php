@@ -1,4 +1,10 @@
-@extends('custom.master')
+@extends('custom.master', ['sharePreview' => [
+    'title' => $post->title,
+    'description' => $post->short_description,
+    'body' => $post->content,
+    'image' => $post->image,
+    'type' => 'article',
+]])
 @section('content')
 
 <main class="container mx-auto px-4 py-8">
@@ -71,7 +77,7 @@
     </a>
 
     <!-- WhatsApp -->
-    <a href="https://api.whatsapp.com/send?text={{ urlencode($post->title.' '.request()->url()) }}"
+    <a href="https://api.whatsapp.com/send?text={{ urlencode(url()->current()) }}"
        target="_blank"
        class="bg-green-500 text-white px-4 py-2 rounded-lg flex items-center justify-center hover:bg-green-600 transition">
         <i class="fab fa-whatsapp"></i>
@@ -188,7 +194,7 @@
     </a>
 
     <!-- WhatsApp -->
-    <a href="https://api.whatsapp.com/send?text={{ urlencode($post->title.' '.request()->url()) }}"
+    <a href="https://api.whatsapp.com/send?text={{ urlencode(url()->current()) }}"
        target="_blank"
        class="bg-green-500 text-white px-4 py-2 rounded-lg flex items-center justify-center">
         <i class="fab fa-whatsapp"></i>

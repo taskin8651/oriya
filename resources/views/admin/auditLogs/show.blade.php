@@ -1,95 +1,30 @@
-@extends('layouts.admin')
+@extends('layouts.admin-show', ['resource' => 'auditLog', 'listRoute' => 'admin.audit-logs.index', 'record' => $auditLog])
+
 @section('content')
-
-<div class="card">
-    <div class="card-header">
-        {{ trans('global.show') }} {{ trans('cruds.auditLog.title') }}
-    </div>
-
-    <div class="card-body">
-        <div class="form-group">
-            <div class="form-group">
-                <a class="btn btn-default" href="{{ route('admin.audit-logs.index') }}">
-                    {{ trans('global.back_to_list') }}
-                </a>
-            </div>
-            <table class="table table-bordered table-striped">
-                <tbody>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.auditLog.fields.id') }}
-                        </th>
-                        <td>
-                            {{ $auditLog->id }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.auditLog.fields.description') }}
-                        </th>
-                        <td>
-                            {{ $auditLog->description }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.auditLog.fields.subject_id') }}
-                        </th>
-                        <td>
-                            {{ $auditLog->subject_id }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.auditLog.fields.subject_type') }}
-                        </th>
-                        <td>
-                            {{ $auditLog->subject_type }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.auditLog.fields.user_id') }}
-                        </th>
-                        <td>
-                            {{ $auditLog->user_id }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.auditLog.fields.properties') }}
-                        </th>
-                        <td>
-                            {{ $auditLog->properties }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.auditLog.fields.host') }}
-                        </th>
-                        <td>
-                            {{ $auditLog->host }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.auditLog.fields.created_at') }}
-                        </th>
-                        <td>
-                            {{ $auditLog->created_at }}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="form-group">
-                <a class="btn btn-default" href="{{ route('admin.audit-logs.index') }}">
-                    {{ trans('global.back_to_list') }}
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
+    <x-admin.detail-field :label="trans('cruds.auditLog.fields.id')">
+        {{ $auditLog->id }}
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.auditLog.fields.description')" wide>
+        {{ $auditLog->description }}
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.auditLog.fields.subject_id')">
+        {{ $auditLog->subject_id }}
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.auditLog.fields.subject_type')">
+        {{ $auditLog->subject_type }}
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.auditLog.fields.user_id')">
+        {{ $auditLog->user_id }}
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.auditLog.fields.properties')" wide>
+        @if($auditLog->properties?->isNotEmpty())
+            <pre class="detail-json">{{ $auditLog->properties->toJson(JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
+        @endif
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.auditLog.fields.host')">
+        {{ $auditLog->host }}
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.auditLog.fields.created_at')">
+        {{ $auditLog->created_at }}
+    </x-admin.detail-field>
 @endsection

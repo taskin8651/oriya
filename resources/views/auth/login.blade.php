@@ -1,79 +1,30 @@
-@extends('layouts.app')
+@extends('layouts.auth-premium', ['authTitle' => trans('global.login')])
+
 @section('content')
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card mx-4">
-            <div class="card-body p-4">
-                <h1>{{ trans('panel.site_title') }}</h1>
+    <form class="auth-form" method="POST" action="{{ route('login') }}">
+        @csrf
 
-                <p class="text-muted">{{ trans('global.login') }}</p>
+        <x-auth.field name="email" :label="trans('global.login_email')" :value="old('email')"
+            autocomplete="email" inputmode="email" required autofocus />
 
-                @if(session('message'))
-                    <div class="alert alert-info" role="alert">
-                        {{ session('message') }}
-                    </div>
-                @endif
+        <x-auth.field name="password" :label="trans('global.login_password')" type="password"
+            autocomplete="current-password" required />
 
-                <form method="POST" action="{{ route('login') }}">
-                    @csrf
+        <div class="auth-form-options">
+            <label class="auth-remember" for="remember">
+                <input id="remember" name="remember" type="checkbox" @checked(old('remember'))>
+                <span>{{ trans('global.remember_me') }}</span>
+            </label>
 
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">
-                                <i class="fa fa-user"></i>
-                            </span>
-                        </div>
-
-                        <input id="email" name="email" type="text" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" required autocomplete="email" autofocus placeholder="{{ trans('global.login_email') }}" value="{{ old('email', null) }}">
-
-                        @if($errors->has('email'))
-                            <div class="invalid-feedback">
-                                {{ $errors->first('email') }}
-                            </div>
-                        @endif
-                    </div>
-
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fa fa-lock"></i></span>
-                        </div>
-
-                        <input id="password" name="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" required placeholder="{{ trans('global.login_password') }}">
-
-                        @if($errors->has('password'))
-                            <div class="invalid-feedback">
-                                {{ $errors->first('password') }}
-                            </div>
-                        @endif
-                    </div>
-
-                    <div class="input-group mb-4">
-                        <div class="form-check checkbox">
-                            <input class="form-check-input" name="remember" type="checkbox" id="remember" style="vertical-align: middle;" />
-                            <label class="form-check-label" for="remember" style="vertical-align: middle;">
-                                {{ trans('global.remember_me') }}
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-6">
-                            <button type="submit" class="btn btn-primary px-4">
-                                {{ trans('global.login') }}
-                            </button>
-                        </div>
-                        <div class="col-6 text-right">
-                            @if(Route::has('password.request'))
-                                <a class="btn btn-link px-0" href="{{ route('password.request') }}">
-                                    {{ trans('global.forgot_password') }}
-                                </a><br>
-                            @endif
-
-                        </div>
-                    </div>
-                </form>
-            </div>
+            @if(Route::has('password.request'))
+                <a class="auth-link" href="{{ route('password.request') }}">{{ trans('global.forgot_password') }}</a>
+            @endif
         </div>
-    </div>
-</div>
+
+        <button class="auth-submit" type="submit">{{ trans('global.login') }}</button>
+    </form>
+
+    @if(Route::has('register'))
+        <p class="auth-switch">{{ __('Need an account?') }} <a class="auth-link" href="{{ route('register') }}">{{ __('Register') }}</a></p>
+    @endif
 @endsection

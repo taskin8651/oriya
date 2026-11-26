@@ -1,13 +1,23 @@
+@php
+    $adminRecord = $adminDetail ?? $adminForm ?? null;
+    $adminPageTitle = $adminRecord['title'] ?? $adminIndexTitle ?? $adminUtilityTitle ?? trans('panel.site_title');
+    $adminPageStyle = match (true) {
+        isset($adminDetail) => 'admin-detail',
+        isset($adminForm) => 'admin-form',
+        isset($adminIndexTitle) => 'admin-index',
+        default => 'admin-utility',
+    };
+@endphp
 <!DOCTYPE html>
-<html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ trans('panel.site_title') }}</title>
+    <title>{{ $adminPageTitle }} · NewsPortal</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet" />
     <link href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" rel="stylesheet" />
@@ -22,76 +32,73 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/1.5.0/css/perfect-scrollbar.min.css" rel="stylesheet" />
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet" />
+    <link href="{{ asset('css/admin-dashboard.css') }}" rel="stylesheet" />
+    @if($adminPageStyle !== 'admin-utility')
+        <link href="{{ asset('css/' . $adminPageStyle . '.css') }}" rel="stylesheet" />
+    @endif
+    <script src="{{ asset('js/dashboard-navigation.js') }}" defer></script>
     @yield('styles')
 </head>
 
-<body class="c-app">
+<body class="news-admin {{ $adminPageStyle }}">
     @include('partials.menu')
-    <div class="c-wrapper">
-        <header class="c-header c-header-fixed px-3">
-            <button class="c-header-toggler c-class-toggler d-lg-none mfe-auto" type="button" data-target="#sidebar" data-class="c-sidebar-show">
-                <i class="fas fa-fw fa-bars"></i>
-            </button>
-
-            <a class="c-header-brand d-lg-none" href="#">{{ trans('panel.site_title') }}</a>
-
-            <button class="c-header-toggler mfs-3 d-md-down-none" type="button" responsive="true">
-                <i class="fas fa-fw fa-bars"></i>
-            </button>
-
-            <ul class="c-header-nav ml-auto">
-                @if(count(config('panel.available_languages', [])) > 1)
-                    <li class="c-header-nav-item dropdown d-md-down-none">
-                        <a class="c-header-nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                            {{ strtoupper(app()->getLocale()) }}
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            @foreach(config('panel.available_languages') as $langLocale => $langName)
-                                <a class="dropdown-item" href="{{ url()->current() }}?change_language={{ $langLocale }}">{{ strtoupper($langLocale) }} ({{ $langName }})</a>
-                            @endforeach
-                        </div>
-                    </li>
-                @endif
-
-
-            </ul>
-        </header>
-
-        <div class="c-body">
-            <main class="c-main">
-
-
-                <div class="container-fluid">
-                    @if(session('message'))
-                        <div class="row mb-2">
-                            <div class="col-lg-12">
-                                <div class="alert alert-success" role="alert">{{ session('message') }}</div>
-                            </div>
+    <button type="button" class="dashboard-backdrop" data-sidebar-close aria-label="Close navigation" hidden></button>
+    <div class="dashboard-shell">
+        @include('partials.dashboard-header')
+        <main class="dashboard-main">
+            @include('partials.admin-alerts')
+            @if(isset($adminDetail))
+                <div class="admin-page-heading detail-heading">
+                    <h1 id="admin-detail-title">{{ $adminDetail['title'] }}</h1>
+                    @if($adminDetail['listUrl'] || $adminDetail['editUrl'])
+                        <div class="detail-actions">
+                            @if($adminDetail['listUrl'])
+                                <a class="btn detail-back" href="{{ $adminDetail['listUrl'] }}">
+                                    <i class="fas fa-chevron-left" aria-hidden="true"></i> {{ trans('global.back_to_list') }}
+                                </a>
+                            @endif
+                            @if($adminDetail['editUrl'])
+                                <a class="btn detail-edit" href="{{ $adminDetail['editUrl'] }}">
+                                    <i class="fas fa-pen" aria-hidden="true"></i> {{ trans('global.edit') }}
+                                </a>
+                            @endif
                         </div>
                     @endif
-                    @if($errors->count() > 0)
-                        <div class="alert alert-danger">
-                            <ul class="list-unstyled">
-                                @foreach($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-                    @yield('content')
-
                 </div>
-
-
-            </main>
-            <form id="logoutform" action="{{ route('logout') }}" method="POST" style="display: none;">
-                {{ csrf_field() }}
-            </form>
-        </div>
+                <section class="dashboard-card detail-card" aria-labelledby="admin-detail-title">
+                    <dl class="detail-grid">
+                        @yield('content')
+                    </dl>
+                </section>
+            @elseif(isset($adminForm))
+                <div class="admin-page-heading form-heading">
+                    <span class="form-heading-icon" aria-hidden="true"><i class="fas {{ request()->routeIs('admin.*.edit') ? 'fa-pen' : 'fa-plus' }}"></i></span>
+                    <h1 id="admin-form-title">{{ $adminForm['title'] }}</h1>
+                </div>
+                <section class="dashboard-card form-card" aria-labelledby="admin-form-title">
+                    @yield('content')
+                </section>
+            @elseif(isset($adminIndexTitle))
+                <div class="admin-page-heading">
+                    <div class="admin-page-heading-copy">
+                        <h1>{{ $adminIndexTitle }}</h1>
+                        <p>{{ number_format($adminIndexCount) }} {{ Str::plural('record', $adminIndexCount) }}</p>
+                    </div>
+                    <div class="index-actions">@yield('indexActions')</div>
+                </div>
+                <section class="dashboard-card index-card" aria-label="{{ $adminIndexTitle }}">
+                    <div class="index-table-wrap">
+                        @yield('content')
+                    </div>
+                </section>
+            @else
+                @yield('content')
+            @endif
+        </main>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/1.5.0/perfect-scrollbar.min.js"></script>
     <script src="https://unpkg.com/@coreui/coreui@3.2/dist/js/coreui.min.js"></script>
     <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
@@ -147,7 +154,11 @@
     order: [],
     scrollX: true,
     pageLength: 100,
+    @isset($adminIndexTitle)
+    dom: '<"index-table-toolbar"fl><"index-table-buttons"B>rt<"index-table-footer"ip><"actions">',
+    @else
     dom: 'lBfrtip<"actions">',
+    @endisset
     buttons: [
       {
         extend: 'selectAll',
@@ -222,6 +233,18 @@
   });
 
   $.fn.dataTable.ext.classes.sPageButton = '';
+
+  @isset($adminIndexTitle)
+    const shell = document.querySelector('.dashboard-shell');
+    shell.addEventListener('transitionend', function (event) {
+      if (event.target === shell && event.propertyName === 'margin-left') {
+        $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
+      }
+    });
+    document.querySelector('[data-sidebar-toggle]').addEventListener('click', function () {
+      requestAnimationFrame(() => $($.fn.dataTable.tables(true)).DataTable().columns.adjust());
+    });
+  @endisset
 });
 
     </script>

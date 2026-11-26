@@ -1,67 +1,16 @@
-@extends('layouts.admin')
+@extends('layouts.admin-show', ['resource' => 'crousel', 'listRoute' => 'admin.crousels.index', 'record' => $crousel, 'recordTitle' => $crousel->title])
+
 @section('content')
-
-<div class="card">
-    <div class="card-header">
-        {{ trans('global.show') }} {{ trans('cruds.crousel.title') }}
-    </div>
-
-    <div class="card-body">
-        <div class="form-group">
-            <div class="form-group">
-                <a class="btn btn-default" href="{{ route('admin.crousels.index') }}">
-                    {{ trans('global.back_to_list') }}
-                </a>
-            </div>
-            <table class="table table-bordered table-striped">
-                <tbody>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.crousel.fields.id') }}
-                        </th>
-                        <td>
-                            {{ $crousel->id }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.crousel.fields.upload_image') }}
-                        </th>
-                        <td>
-                            @if($crousel->upload_image)
-                                <a href="{{ $crousel->upload_image->getUrl() }}" target="_blank" style="display: inline-block">
-                                    <img src="{{ $crousel->upload_image->getUrl('thumb') }}">
-                                </a>
-                            @endif
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.crousel.fields.title') }}
-                        </th>
-                        <td>
-                            {{ $crousel->title }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.crousel.fields.description') }}
-                        </th>
-                        <td>
-                            {{ $crousel->description }}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="form-group">
-                <a class="btn btn-default" href="{{ route('admin.crousels.index') }}">
-                    {{ trans('global.back_to_list') }}
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
+    <x-admin.detail-field :label="trans('cruds.crousel.fields.id')">
+        {{ $crousel->id }}
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.crousel.fields.upload_image')" wide>
+        <x-admin.detail-image :media="$crousel->upload_image" :label="trans('cruds.crousel.fields.upload_image')" />
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.crousel.fields.title')">
+        {{ $crousel->title }}
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.crousel.fields.description')" wide>
+        {{ $crousel->description }}
+    </x-admin.detail-field>
 @endsection

@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.admin', ['adminUtilityTitle' => trans('global.my_profile')])
 @section('content')
 
 <div class="row">

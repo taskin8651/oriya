@@ -1,0 +1,234 @@
+.admin-form {
+    --form-border: #42404c;
+    --form-surface: #141419;
+    --form-raised: #24232c;
+    --form-accent: #ff646e;
+    --form-error: #ff9ea5;
+}
+
+.admin-form .form-heading,
+.admin-form .form-card { max-width: 1140px; }
+.admin-form .form-heading {
+    justify-content: flex-start;
+    min-height: clamp(86px, 8.5vw, 125px);
+    padding-block: clamp(14px, 1.55vw, 26px);
+}
+.form-heading-icon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: clamp(40px, 4vw, 60px);
+    aspect-ratio: 1;
+    border: 1px solid #a63241;
+    border-radius: 13px;
+    background: linear-gradient(145deg, #8d2833, #44202b);
+    color: #ffd9db;
+    font-size: clamp(.95rem, 1.4vw, 1.35rem);
+}
+.admin-form .form-card { padding: clamp(16px, 2.1vw, 34px); }
+.admin-record-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(17px, 1.65vw, 28px);
+}
+.admin-record-form > .form-group {
+    min-width: 0;
+    margin: 0;
+}
+.admin-record-form > .form-group:only-of-type,
+.admin-record-form > .form-group:has(> textarea, > .dropzone),
+.admin-record-form > .form-actions { grid-column: 1 / -1; }
+.admin-record-form .form-group > label {
+    display: block;
+    margin-bottom: 7px;
+    color: #eeedf2;
+    font-size: .94rem;
+    font-weight: 650;
+}
+.admin-record-form label.required::after { color: var(--form-error); }
+.admin-record-form .form-control {
+    min-height: 45px;
+    padding: 9px 12px;
+    border: 1px solid var(--form-border);
+    border-radius: 9px;
+    background: var(--form-surface);
+    color: var(--text);
+    font-size: .95rem;
+    line-height: 1.45;
+}
+.admin-record-form textarea.form-control { min-height: 110px; resize: vertical; }
+.admin-record-form select option { background: var(--form-surface); color: var(--text); }
+.admin-record-form .form-control[readonly] { background: #22212a; }
+.admin-record-form .form-control::placeholder { color: #a6a2b2; }
+.admin-record-form .form-control:focus,
+.admin-record-form .select2-container--focus .select2-selection,
+.admin-record-form .select2-container--open .select2-selection {
+    border-color: var(--form-accent);
+    box-shadow: 0 0 0 3px #ff646e28;
+}
+.admin-record-form :is(input[type="checkbox"], input[type="radio"]) { accent-color: #ed424d; }
+.admin-record-form .help-block {
+    display: block;
+    color: #b9b5c5;
+    font-size: .84rem;
+}
+.admin-record-form .invalid-feedback {
+    margin-top: 6px;
+    color: var(--form-error);
+    font-size: .85rem;
+}
+.admin-record-form .is-invalid,
+.admin-record-form .is-invalid + .select2 .select2-selection,
+.admin-record-form .is-invalid + .ck .ck-toolbar,
+.admin-record-form .is-invalid + .ck .ck-editor__editable { border-color: var(--form-error); }
+.admin-record-form .is-invalid ~ .invalid-feedback { display: block; }
+.admin-form .alert-danger { border-color: #703844; background: #3e2029; color: #ffd2d5; }
+.admin-form .alert-danger ul { margin: 0; }
+.admin-form .alert-success { border-color: #315f4c; background: #183329; color: #baf4c5; }
+
+.admin-record-form :is(.select-all, .deselect-all) {
+    margin: 0 3px 4px 0;
+    padding: 4px 8px;
+    border-color: var(--form-border);
+    border-radius: 6px;
+    background: var(--form-raised);
+    color: #e9e4ef;
+    font-size: .82rem;
+}
+.admin-record-form :is(.select-all, .deselect-all):hover { border-color: #76535f; background: #392730; }
+.admin-record-form .select2 .select2-selection {
+    min-height: 45px;
+    border: 1px solid var(--form-border);
+    border-radius: 9px;
+    background: var(--form-surface);
+}
+.admin-record-form .select2 .select2-selection--single .select2-selection__rendered {
+    padding: 9px 32px 9px 12px;
+    color: var(--text);
+    line-height: 25px;
+}
+.admin-record-form .select2 .select2-selection--single .select2-selection__arrow { height: 43px; right: 7px; }
+.admin-form .select2 .select2-selection--single .select2-selection__arrow b { border-top-color: #c9c3d1; }
+.admin-form .select2 .select2-selection__placeholder { color: #aaa5b5; }
+.admin-form .select2 .select2-selection--multiple .select2-selection__rendered { padding: 2px 8px; }
+.admin-form .select2 .select2-selection--multiple .select2-selection__choice {
+    border-color: #67414e;
+    background: #3d2731;
+    color: #ffe0e4;
+}
+.admin-form .select2 .select2-selection__choice__remove { color: #e2b2bd; }
+.admin-form .select2-search__field { color: var(--text); }
+.admin-form .select2-dropdown {
+    border-color: var(--form-border);
+    border-radius: 8px;
+    background: #22212a;
+    color: var(--text);
+}
+.admin-form .select2-search--dropdown .select2-search__field {
+    border: 1px solid var(--form-border);
+    border-radius: 5px;
+    background: var(--form-surface);
+}
+.admin-form .select2-results__option { padding: 7px 9px; }
+.admin-form .select2-results__option[aria-selected="true"] { background: #3a2e3b; }
+.admin-form .select2-results__option--highlighted[aria-selected] { background: #7d2d3c; color: #fff; }
+
+.admin-record-form .ck {
+    --ck-color-base-background: #1d1c24;
+    --ck-color-base-border: #42404c;
+    --ck-color-text: #f5f5f7;
+    --ck-color-toolbar-background: #24232c;
+    --ck-color-toolbar-border: #42404c;
+    --ck-color-button-default-hover-background: #343142;
+    --ck-color-button-default-active-background: #3c3544;
+    --ck-color-button-on-background: #512c3b;
+    --ck-color-button-on-color: #ffd4d9;
+    --ck-color-button-on-hover-background: #633140;
+    --ck-color-panel-background: #24232c;
+    --ck-color-panel-border: #42404c;
+    --ck-color-input-background: #141419;
+    --ck-color-input-text: #f5f5f7;
+    --ck-color-focus-border: #ff646e;
+    --ck-border-radius: 9px;
+}
+.admin-record-form .ck.ck-editor__editable_inline {
+    min-height: 225px;
+    padding-inline: 15px;
+    background: var(--form-surface);
+    color: var(--text);
+}
+.admin-record-form .ck-editor__editable p { margin: .7em 0; }
+
+.admin-record-form .dropzone {
+    min-height: 145px;
+    padding: 14px;
+    border: 1px dashed #855661;
+    border-radius: 11px;
+    background: linear-gradient(120deg, #211b25, #15141a);
+    color: #f0dce4;
+}
+.admin-record-form .dropzone:is(:hover, .dz-drag-hover) { border-color: var(--form-accent); }
+.admin-record-form .dropzone .dz-message { margin: 15px 0; }
+.admin-record-form .dropzone .dz-message::before {
+    content: "\f093";
+    display: block;
+    margin-bottom: 8px;
+    color: #ff9da7;
+    font: 900 22px/1.25 "Font Awesome 5 Free";
+}
+.admin-record-form .dropzone .dz-preview {
+    margin: 8px;
+    padding: 8px;
+    border-radius: 9px;
+    background: #27232e;
+}
+.admin-record-form .dropzone .dz-preview .dz-image { border-radius: 7px; }
+.admin-record-form .dropzone .dz-preview .dz-details { color: #fff; }
+.admin-record-form .dropzone .dz-preview .dz-details span { background-color: #211c26dc; }
+.admin-record-form .dropzone .dz-remove { margin-top: 5px; color: #ffc7cd; }
+
+.admin-form .bootstrap-datetimepicker-widget {
+    border-color: var(--form-border);
+    background: #23222b;
+    color: var(--text);
+}
+.admin-form .bootstrap-datetimepicker-widget table td:not(.active):hover,
+.admin-form .bootstrap-datetimepicker-widget table th:hover,
+.admin-form .bootstrap-datetimepicker-widget table td span:hover { background: #3d2e3c; }
+.admin-form .bootstrap-datetimepicker-widget table td.active,
+.admin-form .bootstrap-datetimepicker-widget table td.active:hover { background: #95333e; color: #fff; }
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: clamp(14px, 1.5vw, 24px);
+    border-top: 1px solid #34313c;
+}
+.form-actions .btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    min-height: 43px;
+    padding: 8px 18px;
+    border-radius: 9px;
+    font-weight: 650;
+}
+.form-cancel { border-color: var(--form-border); background: var(--form-raised); color: var(--text); }
+.form-cancel:hover { border-color: #715260; background: #322630; color: #fff; }
+.form-save {
+    border-color: #ec4952;
+    background: linear-gradient(145deg, #e52c35, #9c2430);
+    box-shadow: inset 0 1px #ffffff29;
+    color: #fff;
+}
+.form-save:hover { border-color: #ff8186; background: linear-gradient(145deg, #f4424b, #b22837); color: #fff; }
+.admin-form .btn:focus-visible { outline: 2px solid var(--form-accent); outline-offset: 3px; }
+
+@media (max-width: 680px) {
+    .admin-record-form { grid-template-columns: minmax(0, 1fr); }
+    .admin-form .form-heading { gap: 10px; }
+    .admin-form .admin-breadcrumb .breadcrumb-parent,
+    .admin-form .admin-breadcrumb .breadcrumb-parent + i { display: none; }
+}

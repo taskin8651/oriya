@@ -1,43 +1,34 @@
-@extends('layouts.admin')
-@section('content')
-@can('breaking_news_create')
-    <div style="margin-bottom: 10px;" class="row">
-        <div class="col-lg-12">
-            <a class="btn btn-success" href="{{ route('admin.breaking-newss.create') }}">
-                {{ trans('global.add') }} {{ trans('cruds.breakingNews.title_singular') }}
-            </a>
-            <button class="btn btn-warning" data-toggle="modal" data-target="#csvImportModal">
-                {{ trans('global.app_csvImport') }}
-            </button>
-            @include('csvImport.modal', ['model' => 'BreakingNews', 'route' => 'admin.breaking-newss.parseCsvImport'])
-        </div>
-    </div>
-@endcan
-<div class="card">
-    <div class="card-header">
-        {{ trans('cruds.breakingNews.title_singular') }} {{ trans('global.list') }}
-    </div>
+@extends('layouts.admin', ['adminIndexTitle' => trans('cruds.breakingNews.title'), 'adminIndexCount' => count($breakingNewss)])
 
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class=" table table-bordered table-striped table-hover datatable datatable-BreakingNews">
+@section('indexActions')
+@can('breaking_news_create')
+    <a class="btn index-add" href="{{ route('admin.breaking-newss.create') }}">
+        <i class="fas fa-plus" aria-hidden="true"></i>
+        {{ trans('global.add') }} {{ trans('cruds.breakingNews.title_singular') }}
+    </a>
+    <button type="button" class="btn index-import" data-toggle="modal" data-target="#csvImportModal">
+        <i class="fas fa-file-upload" aria-hidden="true"></i>
+        {{ trans('global.app_csvImport') }}
+    </button>
+    @include('csvImport.modal', ['model' => 'BreakingNews', 'route' => 'admin.breaking-newss.parseCsvImport'])
+@endcan
+@endsection
+
+@section('content')
+            <table class="table table-hover datatable datatable-BreakingNews">
                 <thead>
                     <tr>
-                        <th width="10">
-
-                        </th>
-                        <th>
+                        <th scope="col" class="index-selection"><span class="sr-only">Select rows</span></th>
+                        <th scope="col">
                             {{ trans('cruds.breakingNews.fields.id') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.breakingNews.fields.title') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.breakingNews.fields.status') }}
                         </th>
-                        <th>
-                            &nbsp;
-                        </th>
+                        <th scope="col" class="index-row-actions">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -53,9 +44,9 @@
                                 {{ $breakingNews->title ?? '' }}
                             </td>
                             <td>
-                                {{ App\Models\BreakingNews::STATUS_SELECT[$breakingNews->status] ?? '' }}
+                                <span class="index-status" data-status="{{ $breakingNews->status }}">{{ App\Models\BreakingNews::STATUS_SELECT[$breakingNews->status] ?? '?' }}</span>
                             </td>
-                            <td>
+                            <td class="index-row-actions">
                                 @can('breaking_news_show')
                                     <a class="btn btn-xs btn-primary" href="{{ route('admin.breaking-newss.show', $breakingNews->id) }}">
                                         {{ trans('global.view') }}
@@ -82,13 +73,8 @@
                     @endforeach
                 </tbody>
             </table>
-        </div>
-    </div>
-</div>
-
-
-
 @endsection
+
 @section('scripts')
 @parent
 <script>

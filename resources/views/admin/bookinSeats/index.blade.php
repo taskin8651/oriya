@@ -1,58 +1,49 @@
-@extends('layouts.admin')
-@section('content')
-@can('bookin_seat_create')
-    <div style="margin-bottom: 10px;" class="row">
-        <div class="col-lg-12">
-            <a class="btn btn-success" href="{{ route('admin.bookin-seats.create') }}">
-                {{ trans('global.add') }} {{ trans('cruds.bookinSeat.title_singular') }}
-            </a>
-            <button class="btn btn-warning" data-toggle="modal" data-target="#csvImportModal">
-                {{ trans('global.app_csvImport') }}
-            </button>
-            @include('csvImport.modal', ['model' => 'BookinSeat', 'route' => 'admin.bookin-seats.parseCsvImport'])
-        </div>
-    </div>
-@endcan
-<div class="card">
-    <div class="card-header">
-        {{ trans('cruds.bookinSeat.title_singular') }} {{ trans('global.list') }}
-    </div>
+@extends('layouts.admin', ['adminIndexTitle' => trans('cruds.bookinSeat.title'), 'adminIndexCount' => count($bookinSeats)])
 
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class=" table table-bordered table-striped table-hover datatable datatable-BookinSeat">
+@section('indexActions')
+@can('bookin_seat_create')
+    <a class="btn index-add" href="{{ route('admin.bookin-seats.create') }}">
+        <i class="fas fa-plus" aria-hidden="true"></i>
+        {{ trans('global.add') }} {{ trans('cruds.bookinSeat.title_singular') }}
+    </a>
+    <button type="button" class="btn index-import" data-toggle="modal" data-target="#csvImportModal">
+        <i class="fas fa-file-upload" aria-hidden="true"></i>
+        {{ trans('global.app_csvImport') }}
+    </button>
+    @include('csvImport.modal', ['model' => 'BookinSeat', 'route' => 'admin.bookin-seats.parseCsvImport'])
+@endcan
+@endsection
+
+@section('content')
+            <table class="table table-hover datatable datatable-BookinSeat">
                 <thead>
                     <tr>
-                        <th width="10">
-
-                        </th>
-                        <th>
+                        <th scope="col" class="index-selection"><span class="sr-only">Select rows</span></th>
+                        <th scope="col">
                             {{ trans('cruds.bookinSeat.fields.id') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.bookinSeat.fields.hall') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.bookinSeat.fields.user') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.bookinSeat.fields.seat_code') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.bookinSeat.fields.row') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.bookinSeat.fields.column') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.bookinSeat.fields.price') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.bookinSeat.fields.status') }}
                         </th>
-                        <th>
-                            &nbsp;
-                        </th>
+                        <th scope="col" class="index-row-actions">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -83,9 +74,9 @@
                                 {{ $bookinSeat->price ?? '' }}
                             </td>
                             <td>
-                                {{ App\Models\BookinSeat::STATUS_SELECT[$bookinSeat->status] ?? '' }}
+                                <span class="index-status" data-status="{{ $bookinSeat->status }}">{{ App\Models\BookinSeat::STATUS_SELECT[$bookinSeat->status] ?? '?' }}</span>
                             </td>
-                            <td>
+                            <td class="index-row-actions">
                                 @can('bookin_seat_show')
                                     <a class="btn btn-xs btn-primary" href="{{ route('admin.bookin-seats.show', $bookinSeat->id) }}">
                                         {{ trans('global.view') }}
@@ -112,13 +103,8 @@
                     @endforeach
                 </tbody>
             </table>
-        </div>
-    </div>
-</div>
-
-
-
 @endsection
+
 @section('scripts')
 @parent
 <script>

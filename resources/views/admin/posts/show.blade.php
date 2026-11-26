@@ -1,125 +1,41 @@
-@extends('layouts.admin')
+@extends('layouts.admin-show', ['resource' => 'post', 'listRoute' => 'admin.posts.index', 'record' => $post, 'recordTitle' => $post->title])
+
 @section('content')
-
-<div class="card">
-    <div class="card-header">
-        {{ trans('global.show') }} {{ trans('cruds.post.title') }}
-    </div>
-
-    <div class="card-body">
-        <div class="form-group">
-            <div class="form-group">
-                <a class="btn btn-default" href="{{ route('admin.posts.index') }}">
-                    {{ trans('global.back_to_list') }}
-                </a>
-            </div>
-            <table class="table table-bordered table-striped">
-                <tbody>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.post.fields.id') }}
-                        </th>
-                        <td>
-                            {{ $post->id }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.post.fields.title') }}
-                        </th>
-                        <td>
-                            {{ $post->title }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.post.fields.slug') }}
-                        </th>
-                        <td>
-                            {{ $post->slug }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.post.fields.short_description') }}
-                        </th>
-                        <td>
-                            {{ $post->short_description }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.post.fields.content') }}
-                        </th>
-                        <td>
-                            {!! $post->content !!}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.post.fields.image') }}
-                        </th>
-                        <td>
-                            @if($post->image)
-                                <a href="{{ $post->image->getUrl() }}" target="_blank" style="display: inline-block">
-                                    <img src="{{ $post->image->getUrl('thumb') }}">
-                                </a>
-                            @endif
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.post.fields.category') }}
-                        </th>
-                        <td>
-                            {{ $post->category->name ?? '' }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.post.fields.author') }}
-                        </th>
-                        <td>
-                            {{ $post->author->name ?? '' }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.post.fields.tag') }}
-                        </th>
-                        <td>
-                            @foreach($post->tags as $key => $tag)
-                                <span class="label label-info">{{ $tag->name }}</span>
-                            @endforeach
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.post.fields.status') }}
-                        </th>
-                        <td>
-                            {{ App\Models\Post::STATUS_SELECT[$post->status] ?? '' }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.post.fields.view') }}
-                        </th>
-                        <td>
-                            {{ $post->view }}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="form-group">
-                <a class="btn btn-default" href="{{ route('admin.posts.index') }}">
-                    {{ trans('global.back_to_list') }}
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
+    <x-admin.detail-field :label="trans('cruds.post.fields.id')">
+        {{ $post->id }}
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.post.fields.title')">
+        {{ $post->title }}
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.post.fields.slug')">
+        {{ $post->slug }}
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.post.fields.short_description')" wide>
+        {{ $post->short_description }}
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.post.fields.content')" wide prose>
+        {!! $post->content !!}
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.post.fields.image')" wide>
+        <x-admin.detail-image :media="$post->image" :label="trans('cruds.post.fields.image')" />
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.post.fields.category')">
+        {{ $post->category->name ?? '' }}
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.post.fields.author')">
+        {{ $post->author->name ?? '' }}
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.post.fields.tag')">
+        @foreach($post->tags as $key => $tag)
+            <span class="detail-chip">{{ $tag->name }}</span>
+        @endforeach
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.post.fields.status')">
+        @if(isset(App\Models\Post::STATUS_SELECT[$post->status]))
+            <span class="detail-status" data-status="{{ $post->status }}">{{ App\Models\Post::STATUS_SELECT[$post->status] }}</span>
+        @endif
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.post.fields.view')">
+        {{ $post->view }}
+    </x-admin.detail-field>
 @endsection

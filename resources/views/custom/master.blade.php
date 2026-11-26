@@ -22,11 +22,11 @@
 @endphp
 
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="hi" prefix="og: https://ogp.me/ns#">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biplabi Parikrama</title>
+    @include('partials.share-metadata')
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -205,7 +205,7 @@ function liveSearch(query) {
 
         <!-- Left: Logo -->
         <div class="flex-shrink-0">
-            <img src="{{ $headerlogo->upload_image?->getUrl() ?? 'https://via.placeholder.com/150x50' }}" 
+            <img src="{{ $headerlogo?->upload_image?->getUrl() ?? 'https://via.placeholder.com/150x50' }}"
                 alt="{{ $headerlogo->title ?? '--' }}" 
                 class="h-12 md:h-16 object-contain">
         </div>
@@ -436,7 +436,7 @@ function liveSearch(query) {
     <!-- Logo Image -->
     <div class="mb-2">
         <h3 class="text-xl font-bold mb-2">{{$footerlogo->title ?? '--'}}</h3>
-        <img src="{{ $footerlogo->upload_image?->getUrl() ?? 'https://via.placeholder.com/150x50' }}" 
+        <img src="{{ $footerlogo?->upload_image?->getUrl() ?? 'https://via.placeholder.com/150x50' }}"
              alt="{{ $footerlogo->title ?? 'Logo' }}" 
              class="w-60 h-40 ">
     </div>

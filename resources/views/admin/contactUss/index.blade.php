@@ -1,49 +1,40 @@
-@extends('layouts.admin')
-@section('content')
-@can('contact_us_create')
-    <div style="margin-bottom: 10px;" class="row">
-        <div class="col-lg-12">
-            <a class="btn btn-success" href="{{ route('admin.contact-uss.create') }}">
-                {{ trans('global.add') }} {{ trans('cruds.contactUs.title_singular') }}
-            </a>
-            <button class="btn btn-warning" data-toggle="modal" data-target="#csvImportModal">
-                {{ trans('global.app_csvImport') }}
-            </button>
-            @include('csvImport.modal', ['model' => 'ContactUs', 'route' => 'admin.contact-uss.parseCsvImport'])
-        </div>
-    </div>
-@endcan
-<div class="card">
-    <div class="card-header">
-        {{ trans('cruds.contactUs.title_singular') }} {{ trans('global.list') }}
-    </div>
+@extends('layouts.admin', ['adminIndexTitle' => trans('cruds.contactUs.title'), 'adminIndexCount' => count($contactUss)])
 
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class=" table table-bordered table-striped table-hover datatable datatable-ContactUs">
+@section('indexActions')
+@can('contact_us_create')
+    <a class="btn index-add" href="{{ route('admin.contact-uss.create') }}">
+        <i class="fas fa-plus" aria-hidden="true"></i>
+        {{ trans('global.add') }} {{ trans('cruds.contactUs.title_singular') }}
+    </a>
+    <button type="button" class="btn index-import" data-toggle="modal" data-target="#csvImportModal">
+        <i class="fas fa-file-upload" aria-hidden="true"></i>
+        {{ trans('global.app_csvImport') }}
+    </button>
+    @include('csvImport.modal', ['model' => 'ContactUs', 'route' => 'admin.contact-uss.parseCsvImport'])
+@endcan
+@endsection
+
+@section('content')
+            <table class="table table-hover datatable datatable-ContactUs">
                 <thead>
                     <tr>
-                        <th width="10">
-
-                        </th>
-                        <th>
+                        <th scope="col" class="index-selection"><span class="sr-only">Select rows</span></th>
+                        <th scope="col">
                             {{ trans('cruds.contactUs.fields.id') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.contactUs.fields.name') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.contactUs.fields.email') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.contactUs.fields.number') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.contactUs.fields.degination') }}
                         </th>
-                        <th>
-                            &nbsp;
-                        </th>
+                        <th scope="col" class="index-row-actions">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -67,7 +58,7 @@
                             <td>
                                 {{ $contactUs->degination ?? '' }}
                             </td>
-                            <td>
+                            <td class="index-row-actions">
                                 @can('contact_us_show')
                                     <a class="btn btn-xs btn-primary" href="{{ route('admin.contact-uss.show', $contactUs->id) }}">
                                         {{ trans('global.view') }}
@@ -94,13 +85,8 @@
                     @endforeach
                 </tbody>
             </table>
-        </div>
-    </div>
-</div>
-
-
-
 @endsection
+
 @section('scripts')
 @parent
 <script>

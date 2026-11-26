@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.admin', ['adminUtilityTitle' => trans('global.app_csvImport')])
 
 @section('content')
 

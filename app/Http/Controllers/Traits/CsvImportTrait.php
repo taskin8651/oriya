@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Traits;
 
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
@@ -43,10 +44,16 @@ trait CsvImportTrait
                 }
             }
 
-            $for_insert = array_chunk($insert, 100);
-
-            foreach ($for_insert as $insert_item) {
-                $model::insert($insert_item);
+            if ($model === Post::class) {
+                (new Post())->getConnection()->transaction(function () use ($insert): void {
+                    foreach ($insert as $row) {
+                        Post::create($row);
+                    }
+                });
+            } else {
+                foreach (array_chunk($insert, 100) as $rows) {
+                    $model::insert($rows);
+                }
             }
 
             $rows  = count($insert);

@@ -99,7 +99,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::post('contact-uss/ckmedia', 'ContactUsController@storeCKEditorImages')->name('contact-uss.storeCKEditorImages');
     Route::post('contact-uss/parse-csv-import', 'ContactUsController@parseCsvImport')->name('contact-uss.parseCsvImport');
     Route::post('contact-uss/process-csv-import', 'ContactUsController@processCsvImport')->name('contact-uss.processCsvImport');
-    Route::resource('contact-uss', 'ContactUsController');
+    Route::resource('contact-uss', 'ContactUsController')->parameters(['contact-uss' => 'contact_us']);
 
     // Newsletter
     Route::delete('newsletters/destroy', 'NewsletterController@massDestroy')->name('newsletters.massDestroy');
@@ -169,7 +169,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::delete('breaking-newss/destroy', 'BreakingNewsController@massDestroy')->name('breaking-newss.massDestroy');
     Route::post('breaking-newss/parse-csv-import', 'BreakingNewsController@parseCsvImport')->name('breaking-newss.parseCsvImport');
     Route::post('breaking-newss/process-csv-import', 'BreakingNewsController@processCsvImport')->name('breaking-newss.processCsvImport');
-    Route::resource('breaking-newss', 'BreakingNewsController');
+    Route::resource('breaking-newss', 'BreakingNewsController')->parameters(['breaking-newss' => 'breaking_news']);
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
     // Change password

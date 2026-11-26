@@ -1,4 +1,4 @@
-@extends('custom.master')
+@extends('custom.master', ['sharePreview' => ['title' => 'E-Paper | Biplabi Parikrama']])
 
 @section('content')
 

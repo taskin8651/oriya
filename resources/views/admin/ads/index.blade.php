@@ -1,61 +1,52 @@
-@extends('layouts.admin')
-@section('content')
-@can('ad_create')
-    <div style="margin-bottom: 10px;" class="row">
-        <div class="col-lg-12">
-            <a class="btn btn-success" href="{{ route('admin.ads.create') }}">
-                {{ trans('global.add') }} {{ trans('cruds.ad.title_singular') }}
-            </a>
-            <button class="btn btn-warning" data-toggle="modal" data-target="#csvImportModal">
-                {{ trans('global.app_csvImport') }}
-            </button>
-            @include('csvImport.modal', ['model' => 'Ad', 'route' => 'admin.ads.parseCsvImport'])
-        </div>
-    </div>
-@endcan
-<div class="card">
-    <div class="card-header">
-        {{ trans('cruds.ad.title_singular') }} {{ trans('global.list') }}
-    </div>
+@extends('layouts.admin', ['adminIndexTitle' => trans('cruds.ad.title'), 'adminIndexCount' => count($ads)])
 
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class=" table table-bordered table-striped table-hover datatable datatable-Ad">
+@section('indexActions')
+@can('ad_create')
+    <a class="btn index-add" href="{{ route('admin.ads.create') }}">
+        <i class="fas fa-plus" aria-hidden="true"></i>
+        {{ trans('global.add') }} {{ trans('cruds.ad.title_singular') }}
+    </a>
+    <button type="button" class="btn index-import" data-toggle="modal" data-target="#csvImportModal">
+        <i class="fas fa-file-upload" aria-hidden="true"></i>
+        {{ trans('global.app_csvImport') }}
+    </button>
+    @include('csvImport.modal', ['model' => 'Ad', 'route' => 'admin.ads.parseCsvImport'])
+@endcan
+@endsection
+
+@section('content')
+            <table class="table table-hover datatable datatable-Ad">
                 <thead>
                     <tr>
-                        <th width="10">
-
-                        </th>
-                        <th>
+                        <th scope="col" class="index-selection"><span class="sr-only">Select rows</span></th>
+                        <th scope="col">
                             {{ trans('cruds.ad.fields.id') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.ad.fields.banner') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.ad.fields.link') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.ad.fields.type') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.ad.fields.start_date') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.ad.fields.end_date') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.ad.fields.status') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.ad.fields.impressions') }}
                         </th>
-                        <th>
+                        <th scope="col">
                             {{ trans('cruds.ad.fields.clicks') }}
                         </th>
-                        <th>
-                            &nbsp;
-                        </th>
+                        <th scope="col" class="index-row-actions">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -87,7 +78,7 @@
                                 {{ $ad->end_date ?? '' }}
                             </td>
                             <td>
-                                {{ App\Models\Ad::STATUS_SELECT[$ad->status] ?? '' }}
+                                <span class="index-status" data-status="{{ $ad->status }}">{{ App\Models\Ad::STATUS_SELECT[$ad->status] ?? '?' }}</span>
                             </td>
                             <td>
                                 {{ $ad->impressions ?? '' }}
@@ -95,7 +86,7 @@
                             <td>
                                 {{ $ad->clicks ?? '' }}
                             </td>
-                            <td>
+                            <td class="index-row-actions">
                                 @can('ad_show')
                                     <a class="btn btn-xs btn-primary" href="{{ route('admin.ads.show', $ad->id) }}">
                                         {{ trans('global.view') }}
@@ -122,13 +113,8 @@
                     @endforeach
                 </tbody>
             </table>
-        </div>
-    </div>
-</div>
-
-
-
 @endsection
+
 @section('scripts')
 @parent
 <script>

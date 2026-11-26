@@ -1,13 +1,17 @@
 @extends('layouts.admin')
+
+@php
+    $listRoute = 'admin.create-events.index';
+    $adminForm = [
+        'title' => trans('global.create') . ' ' . trans('cruds.createEvent.title_singular'),
+        'listLabel' => trans('cruds.createEvent.title'),
+        'listRoute' => $listRoute,
+        'listUrl' => Gate::allows('create_event_access') ? route($listRoute) : null,
+    ];
+@endphp
+
 @section('content')
-
-<div class="card">
-    <div class="card-header">
-        {{ trans('global.create') }} {{ trans('cruds.createEvent.title_singular') }}
-    </div>
-
-    <div class="card-body">
-        <form method="POST" action="{{ route("admin.create-events.store") }}" enctype="multipart/form-data">
+        <form class="admin-record-form" method="POST" action="{{ route("admin.create-events.store") }}" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
                 <label for="venue_id">{{ trans('cruds.createEvent.fields.venue') }}</label>
@@ -85,7 +89,7 @@
                 <span class="help-block">{{ trans('cruds.createEvent.fields.age_helper') }}</span>
             </div>
             <div class="form-group">
-                <label>{{ trans('cruds.createEvent.fields.status') }}</label>
+                <label for="status">{{ trans('cruds.createEvent.fields.status') }}</label>
                 <select class="form-control {{ $errors->has('status') ? 'is-invalid' : '' }}" name="status" id="status">
                     <option value disabled {{ old('status', null) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
                     @foreach(App\Models\CreateEvent::STATUS_SELECT as $key => $label)
@@ -113,17 +117,8 @@
                 @endif
                 <span class="help-block">{{ trans('cruds.createEvent.fields.seat_helper') }}</span>
             </div>
-            <div class="form-group">
-                <button class="btn btn-danger" type="submit">
-                    {{ trans('global.save') }}
-                </button>
-            </div>
+            @include('partials.admin-form-actions')
         </form>
-    </div>
-</div>
-
-
-
 @endsection
 
 @section('scripts')
@@ -143,13 +138,13 @@
       height: 4096
     },
     success: function (file, response) {
-      $('form').find('input[name="poster"]').remove()
-      $('form').append('<input type="hidden" name="poster" value="' + response.name + '">')
+      $('.admin-record-form').find('input[name="poster"]').remove()
+      $('.admin-record-form').append('<input type="hidden" name="poster" value="' + response.name + '">')
     },
     removedfile: function (file) {
       file.previewElement.remove()
       if (file.status !== 'error') {
-        $('form').find('input[name="poster"]').remove()
+        $('.admin-record-form').find('input[name="poster"]').remove()
         this.options.maxFiles = this.options.maxFiles + 1
       }
     },
@@ -159,7 +154,7 @@
           this.options.addedfile.call(this, file)
       this.options.thumbnail.call(this, file, file.preview ?? file.preview_url)
       file.previewElement.classList.add('dz-complete')
-      $('form').append('<input type="hidden" name="poster" value="' + file.file_name + '">')
+      $('.admin-record-form').append('<input type="hidden" name="poster" value="' + file.file_name + '">')
       this.options.maxFiles = this.options.maxFiles - 1
 @endif
     },
@@ -209,7 +204,7 @@
                     return reject(response && response.message ? `${genericErrorText}\n${xhr.status} ${response.message}` : `${genericErrorText}\n ${xhr.status} ${xhr.statusText}`);
                   }
 
-                  $('form').append('<input type="hidden" name="ck-media[]" value="' + response.id + '">');
+                  $('.admin-record-form').append('<input type="hidden" name="ck-media[]" value="' + response.id + '">');
 
                   resolve({ default: response.url });
                 });

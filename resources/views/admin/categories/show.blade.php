@@ -1,63 +1,16 @@
-@extends('layouts.admin')
+@extends('layouts.admin-show', ['resource' => 'category', 'listRoute' => 'admin.categories.index', 'record' => $category, 'recordTitle' => $category->name])
+
 @section('content')
-
-<div class="card">
-    <div class="card-header">
-        {{ trans('global.show') }} {{ trans('cruds.category.title') }}
-    </div>
-
-    <div class="card-body">
-        <div class="form-group">
-            <div class="form-group">
-                <a class="btn btn-default" href="{{ route('admin.categories.index') }}">
-                    {{ trans('global.back_to_list') }}
-                </a>
-            </div>
-            <table class="table table-bordered table-striped">
-                <tbody>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.category.fields.id') }}
-                        </th>
-                        <td>
-                            {{ $category->id }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.category.fields.name') }}
-                        </th>
-                        <td>
-                            {{ $category->name }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.category.fields.slug') }}
-                        </th>
-                        <td>
-                            {{ $category->slug }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.category.fields.description') }}
-                        </th>
-                        <td>
-                            {{ $category->description }}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="form-group">
-                <a class="btn btn-default" href="{{ route('admin.categories.index') }}">
-                    {{ trans('global.back_to_list') }}
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
+    <x-admin.detail-field :label="trans('cruds.category.fields.id')">
+        {{ $category->id }}
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.category.fields.name')">
+        {{ $category->name }}
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.category.fields.slug')">
+        {{ $category->slug }}
+    </x-admin.detail-field>
+    <x-admin.detail-field :label="trans('cruds.category.fields.description')" wide>
+        {{ $category->description }}
+    </x-admin.detail-field>
 @endsection

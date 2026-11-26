@@ -1,13 +1,17 @@
 @extends('layouts.admin')
+
+@php
+    $listRoute = 'admin.users.index';
+    $adminForm = [
+        'title' => trans('global.create') . ' ' . trans('cruds.user.title_singular'),
+        'listLabel' => trans('cruds.user.title'),
+        'listRoute' => $listRoute,
+        'listUrl' => Gate::allows('user_access') ? route($listRoute) : null,
+    ];
+@endphp
+
 @section('content')
-
-<div class="card">
-    <div class="card-header">
-        {{ trans('global.create') }} {{ trans('cruds.user.title_singular') }}
-    </div>
-
-    <div class="card-body">
-        <form method="POST" action="{{ route("admin.users.store") }}" enctype="multipart/form-data">
+        <form class="admin-record-form" method="POST" action="{{ route("admin.users.store") }}" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
                 <label class="required" for="name">{{ trans('cruds.user.fields.name') }}</label>
@@ -42,8 +46,8 @@
             <div class="form-group">
                 <label class="required" for="roles">{{ trans('cruds.user.fields.roles') }}</label>
                 <div style="padding-bottom: 4px">
-                    <span class="btn btn-info btn-xs select-all" style="border-radius: 0">{{ trans('global.select_all') }}</span>
-                    <span class="btn btn-info btn-xs deselect-all" style="border-radius: 0">{{ trans('global.deselect_all') }}</span>
+                    <button type="button" class="btn btn-info btn-xs select-all">{{ trans('global.select_all') }}</button>
+                    <button type="button" class="btn btn-info btn-xs deselect-all">{{ trans('global.deselect_all') }}</button>
                 </div>
                 <select class="form-control select2 {{ $errors->has('roles') ? 'is-invalid' : '' }}" name="roles[]" id="roles" multiple required>
                     @foreach($roles as $id => $role)
@@ -88,17 +92,8 @@
                 @endif
                 <span class="help-block">{{ trans('cruds.user.fields.bio_helper') }}</span>
             </div>
-            <div class="form-group">
-                <button class="btn btn-danger" type="submit">
-                    {{ trans('global.save') }}
-                </button>
-            </div>
+            @include('partials.admin-form-actions')
         </form>
-    </div>
-</div>
-
-
-
 @endsection
 
 @section('scripts')
@@ -118,13 +113,13 @@
       height: 4096
     },
     success: function (file, response) {
-      $('form').find('input[name="profile"]').remove()
-      $('form').append('<input type="hidden" name="profile" value="' + response.name + '">')
+      $('.admin-record-form').find('input[name="profile"]').remove()
+      $('.admin-record-form').append('<input type="hidden" name="profile" value="' + response.name + '">')
     },
     removedfile: function (file) {
       file.previewElement.remove()
       if (file.status !== 'error') {
-        $('form').find('input[name="profile"]').remove()
+        $('.admin-record-form').find('input[name="profile"]').remove()
         this.options.maxFiles = this.options.maxFiles + 1
       }
     },
@@ -134,7 +129,7 @@
           this.options.addedfile.call(this, file)
       this.options.thumbnail.call(this, file, file.preview ?? file.preview_url)
       file.previewElement.classList.add('dz-complete')
-      $('form').append('<input type="hidden" name="profile" value="' + file.file_name + '">')
+      $('.admin-record-form').append('<input type="hidden" name="profile" value="' + file.file_name + '">')
       this.options.maxFiles = this.options.maxFiles - 1
 @endif
     },

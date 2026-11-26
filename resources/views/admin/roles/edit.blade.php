@@ -1,13 +1,17 @@
 @extends('layouts.admin')
+
+@php
+    $listRoute = 'admin.roles.index';
+    $adminForm = [
+        'title' => trans('global.edit') . ' ' . trans('cruds.role.title_singular'),
+        'listLabel' => trans('cruds.role.title'),
+        'listRoute' => $listRoute,
+        'listUrl' => Gate::allows('role_access') ? route($listRoute) : null,
+    ];
+@endphp
+
 @section('content')
-
-<div class="card">
-    <div class="card-header">
-        {{ trans('global.edit') }} {{ trans('cruds.role.title_singular') }}
-    </div>
-
-    <div class="card-body">
-        <form method="POST" action="{{ route("admin.roles.update", [$role->id]) }}" enctype="multipart/form-data">
+        <form class="admin-record-form" method="POST" action="{{ route("admin.roles.update", [$role->id]) }}" enctype="multipart/form-data">
             @method('PUT')
             @csrf
             <div class="form-group">
@@ -23,8 +27,8 @@
             <div class="form-group">
                 <label class="required" for="permissions">{{ trans('cruds.role.fields.permissions') }}</label>
                 <div style="padding-bottom: 4px">
-                    <span class="btn btn-info btn-xs select-all" style="border-radius: 0">{{ trans('global.select_all') }}</span>
-                    <span class="btn btn-info btn-xs deselect-all" style="border-radius: 0">{{ trans('global.deselect_all') }}</span>
+                    <button type="button" class="btn btn-info btn-xs select-all">{{ trans('global.select_all') }}</button>
+                    <button type="button" class="btn btn-info btn-xs deselect-all">{{ trans('global.deselect_all') }}</button>
                 </div>
                 <select class="form-control select2 {{ $errors->has('permissions') ? 'is-invalid' : '' }}" name="permissions[]" id="permissions" multiple required>
                     @foreach($permissions as $id => $permission)
@@ -38,15 +42,6 @@
                 @endif
                 <span class="help-block">{{ trans('cruds.role.fields.permissions_helper') }}</span>
             </div>
-            <div class="form-group">
-                <button class="btn btn-danger" type="submit">
-                    {{ trans('global.save') }}
-                </button>
-            </div>
+            @include('partials.admin-form-actions')
         </form>
-    </div>
-</div>
-
-
-
 @endsection

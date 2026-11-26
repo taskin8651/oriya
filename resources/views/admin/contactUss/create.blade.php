@@ -1,13 +1,17 @@
 @extends('layouts.admin')
+
+@php
+    $listRoute = 'admin.contact-uss.index';
+    $adminForm = [
+        'title' => trans('global.create') . ' ' . trans('cruds.contactUs.title_singular'),
+        'listLabel' => trans('cruds.contactUs.title'),
+        'listRoute' => $listRoute,
+        'listUrl' => Gate::allows('contact_us_access') ? route($listRoute) : null,
+    ];
+@endphp
+
 @section('content')
-
-<div class="card">
-    <div class="card-header">
-        {{ trans('global.create') }} {{ trans('cruds.contactUs.title_singular') }}
-    </div>
-
-    <div class="card-body">
-        <form method="POST" action="{{ route("admin.contact-uss.store") }}" enctype="multipart/form-data">
+        <form class="admin-record-form" method="POST" action="{{ route("admin.contact-uss.store") }}" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
                 <label for="name">{{ trans('cruds.contactUs.fields.name') }}</label>
@@ -59,17 +63,8 @@
                 @endif
                 <span class="help-block">{{ trans('cruds.contactUs.fields.message_helper') }}</span>
             </div>
-            <div class="form-group">
-                <button class="btn btn-danger" type="submit">
-                    {{ trans('global.save') }}
-                </button>
-            </div>
+            @include('partials.admin-form-actions')
         </form>
-    </div>
-</div>
-
-
-
 @endsection
 
 @section('scripts')
@@ -100,7 +95,7 @@
                     return reject(response && response.message ? `${genericErrorText}\n${xhr.status} ${response.message}` : `${genericErrorText}\n ${xhr.status} ${xhr.statusText}`);
                   }
 
-                  $('form').append('<input type="hidden" name="ck-media[]" value="' + response.id + '">');
+                  $('.admin-record-form').append('<input type="hidden" name="ck-media[]" value="' + response.id + '">');
 
                   resolve({ default: response.url });
                 });
